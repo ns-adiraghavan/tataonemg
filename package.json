@@ -1,0 +1,10 @@
+{
+  "name": "tata1mg-prescription-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tata 1mg — AI Prescription Processing dashboard (static, single-file).",
+  "scripts": {
+    "build": "echo \"Static site — nothing to build.\" && exit 0",
+    "start": "npx serve ."
+  }
+}

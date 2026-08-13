@@ -162,6 +162,9 @@ h1 span{color:var(--coral)}
 .fchip{font-family:var(--body);font-size:12px;color:var(--muted);background:var(--bg2);border:1px solid var(--line);padding:6px 12px;border-radius:16px;cursor:pointer;transition:.16s}
 .fchip:hover{color:var(--ink);border-color:var(--line2)}
 .fchip.on{color:#0b0b0d;background:var(--coral);border-color:var(--coral);font-weight:600}
+.dlbtn{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-size:12px;font-weight:500;color:var(--coral);background:var(--card);border:1px solid var(--coral);padding:7px 13px;border-radius:8px;cursor:pointer;transition:.16s;white-space:nowrap}
+.dlbtn:hover{color:#0b0b0d;background:var(--coral)}
+.dlbtn svg{flex:none}
 .xtab{width:100%;border-collapse:collapse;font-size:13px}
 .xtab thead th{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:11px 12px;border-bottom:1px solid var(--line2)}
 .xtab tbody td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
@@ -327,7 +330,12 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;margin-top:24px}
   <!-- VIEW 3: EXPLORER -->
   <section class="view" id="v-explorer">
     <div class="panel reveal">
-      <div class="sec-h"><span class="n">03</span><h2>Prescription explorer</h2></div>
+      <div class="sec-h"><span class="n">03</span><h2>Prescription explorer</h2>
+        <button class="dlbtn" id="csvBtn" title="Download the item-level extracted data (respects active filters)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          Download CSV
+        </button>
+      </div>
       <p class="sec-sub">The full extracted corpus. Filter by specialty or case type; select any row to open the item-level breakdown exactly as the engine structured it.</p>
       <div class="filters" id="filters"></div>
       <div style="overflow-x:auto"><table class="xtab"><thead><tr>
@@ -502,6 +510,26 @@ function renderTable(){
     tb.appendChild(tr);tb.appendChild(det);});
   if(!rows.length)tb.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--faint);padding:28px">No prescriptions match these filters.</td></tr>';}
 buildFilters();renderTable();
+
+/* CSV export — one row per extracted item, honouring the active filters */
+function csvCell(v){v=(v==null?'':String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function exportCSV(){
+  const rows=P.filter(p=>(fArea==='All'||p.area===fArea)&&(fCase==='All'||p.case===fCase));
+  const cols=['Rx','Patient','Age','Sex','Hospital','Doctor','Specialty','Case type','Form','Language',
+    'Completeness %','Confidence %','Item category','Item name','Dose','Frequency','Duration','Drug class'];
+  const lines=[cols.map(csvCell).join(',')];
+  rows.forEach(p=>{p.items.forEach(it=>{
+    lines.push([p.rx,p.patient,p.age==null?'':p.age,p.sex,p.hospital,p.doctor,p.area,p.case,p.form,p.lang,
+      p.completeness,p.confidence,it.cat,it.name,it.dose,it.freq,it.dur,it.cls].map(csvCell).join(','));
+  });});
+  const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const tag=(fArea==='All'&&fCase==='All')?'all':[fArea,fCase].filter(x=>x!=='All').join('-').replace(/[^\w-]+/g,'_');
+  a.href=url;a.download=`tata1mg-extracted-${tag}-${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+$('#csvBtn').addEventListener('click',exportCSV);
 
 /* opportunity */
 const OPP=[

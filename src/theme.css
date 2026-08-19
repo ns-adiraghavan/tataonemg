@@ -158,6 +158,26 @@ h1 span{color:var(--coral)}
 .slicer-item.active{border-color:var(--coral)}
 .slicer-k{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:3px}
 .slicer-v{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* program-targeted lists (Explorer) */
+.prog-block{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin-bottom:16px}
+.prog-header{margin-bottom:12px}
+.prog-title{font-family:var(--body);font-size:13px;font-weight:600;color:var(--ink);display:block;margin-bottom:2px}
+.prog-sub{font-size:11px;color:var(--muted)}
+.prog-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.prog-chip{font-family:var(--body);font-size:12px;font-weight:500;border:1.5px solid var(--prog-color,#888);color:var(--prog-color,#888);background:none;padding:6px 13px;border-radius:20px;cursor:pointer;transition:.16s;white-space:nowrap}
+.prog-chip.on{color:#fff;background:var(--prog-color,#888)}
+.prog-chip:hover{opacity:.8}
+.prog-defs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.prog-def-item{display:flex;align-items:baseline;gap:6px;padding:7px 10px;border-radius:8px;background:var(--bg2);border:1px solid transparent;font-size:11px;transition:.15s}
+.prog-def-item.active{border-color:var(--line2);background:var(--card)}
+.prog-def-dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex:none;position:relative;top:1px}
+.prog-def-label{font-weight:600;color:var(--ink);white-space:nowrap}
+.prog-def-text{color:var(--muted);line-height:1.4}
+.prog-export-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--line)}
+.prog-sel-count{font-size:12px;color:var(--muted);flex:1}
+.prog-sel-count b{color:var(--ink);font-weight:600}
+
 .dlgroup{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .dlbtn{display:inline-flex;align-items:center;gap:7px;font-family:var(--body);font-size:12px;font-weight:500;color:var(--coral-dp);background:var(--card);border:1px solid var(--coral);padding:7px 13px;border-radius:8px;cursor:pointer;transition:.16s;white-space:nowrap}
 .dlbtn:hover{color:var(--on-coral);background:var(--coral)}

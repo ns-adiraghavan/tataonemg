@@ -1,0 +1,44 @@
+{
+ "completeness": {
+  "label": "Completeness",
+  "formula": "fields present ÷ 7 core fields",
+  "detail": "Core fields: patient, age/sex, date, hospital, doctor, diagnosis, vitals. A field counts as present when it is non-empty and not ‘Not specified’.",
+  "unit": "%"
+ },
+ "confidence": {
+  "label": "Extraction confidence",
+  "formula": "base + 0.06 × completeness − 2.5 × UNCLEAR flags",
+  "detail": "base = 90 for digital/structured prescriptions, 83 for handwritten. Each field the model marked UNCLEAR removes 2.5 points. Clamped to 60–99.",
+  "unit": "%"
+ },
+ "review": {
+  "label": "Review vs auto-clear",
+  "formula": "review if any UNCLEAR flag OR completeness < 100%",
+  "detail": "Everything else is straight-through (auto-cleared). No confidence threshold is used — a single illegible field routes the script to a human.",
+  "unit": ""
+ },
+ "case": {
+  "label": "Case type",
+  "formula": "clinical chronicity, else longest item duration",
+  "detail": "Emergency/admission markers → Acute / Emergency. A chronic-condition marker in the diagnosis (cancer, chronic, diabetes, hypertension, schizophrenia, varicose, gout…) → Chronic. Otherwise by longest item duration: ≥90 days → Chronic, 15–89 → Sub-acute, <15 → Acute.",
+  "unit": ""
+ },
+ "refill": {
+  "label": "Refill & subscription candidate",
+  "formula": "any medication runs ≥ 1 month or continuous",
+  "detail": "Flags scripts eligible for a refill/subscription nudge based on standing therapy.",
+  "unit": ""
+ },
+ "poly": {
+  "label": "Polypharmacy (adherence pack)",
+  "formula": "script carries ≥ 5 medications",
+  "detail": "Counts distinct Medication-category items only (tests and supportive care excluded).",
+  "unit": ""
+ },
+ "diagnostics": {
+  "label": "Diagnostics cross-sell",
+  "formula": "a test item OR a recorded lab value is present",
+  "detail": "Either an ordered diagnostic item or a numeric vital/lab reading on the script.",
+  "unit": ""
+ }
+}

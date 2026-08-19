@@ -1,0 +1,572 @@
+[
+ {
+  "rx": "RX_001",
+  "cat": "Non-Medication",
+  "name": "Proper positioning",
+  "dose": "-",
+  "freq": "As needed",
+  "dur": "Patient positioning instruction",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Non-Medication",
+  "name": "O2 Therapy",
+  "dose": "-",
+  "freq": "Continuous",
+  "dur": "Target SpO2 > 88%",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Non-Medication",
+  "name": "Nebulization Duolin + Budecort",
+  "dose": "-",
+  "freq": "Stat, then 8th hourly",
+  "dur": "Respiratory support",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Medication",
+  "name": "Inj. Hydrocortisone",
+  "dose": "100 mg (IV)",
+  "freq": "Stat, then 1 vial BD",
+  "dur": "Anti-inflammatory",
+  "cls": "Corticosteroid",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Medication",
+  "name": "Inj. Augmentin",
+  "dose": "1.2 g (IV)",
+  "freq": "1-0-0 / Stat",
+  "dur": "Antibiotic",
+  "cls": "Antibiotic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Medication",
+  "name": "Inj. Ace",
+  "dose": "500 mg (IV)",
+  "freq": "Stat",
+  "dur": "Analgesic / Antipyretic",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Medication",
+  "name": "Inj. Pantop",
+  "dose": "40 mg (IV)",
+  "freq": "Stat",
+  "dur": "Antacid / PPI",
+  "cls": "PPI / Antacid",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Medication",
+  "name": "Inj. Emset",
+  "dose": "4 mg (IV)",
+  "freq": "Stat",
+  "dur": "Antiemetic",
+  "cls": "Antiemetic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Diagnostic Test",
+  "name": "CBC, VBG, LFT/KFT, PT/INR",
+  "dose": "-",
+  "freq": "Immediate",
+  "dur": "Blood panels & coagulation",
+  "cls": "Diagnostic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_001",
+  "cat": "Diagnostic Test",
+  "name": "CXR, ECG, RBS, Trop I, SR Pul",
+  "dose": "-",
+  "freq": "Immediate",
+  "dur": "Imaging, cardiac, sugar, electrolytes",
+  "cls": "Diagnostic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_002",
+  "cat": "Medication",
+  "name": "Syp CALPOL (250/5)",
+  "dose": "4 mL",
+  "freq": "Q6H (Every 6 hours)",
+  "dur": "3 days",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_002",
+  "cat": "Medication",
+  "name": "Syp DELCON",
+  "dose": "3 mL",
+  "freq": "TDS (3 times daily)",
+  "dur": "5 days",
+  "cls": "Respiratory / Cold",
+  "unclear": false
+ },
+ {
+  "rx": "RX_002",
+  "cat": "Medication",
+  "name": "Syp LEVOLIN",
+  "dose": "3 mL",
+  "freq": "TDS (3 times daily)",
+  "dur": "5 days",
+  "cls": "Respiratory / Cold",
+  "unclear": false
+ },
+ {
+  "rx": "RX_002",
+  "cat": "Medication",
+  "name": "Syp MEFTAL-P (100/5)",
+  "dose": "3 mL",
+  "freq": "SOS (As needed)",
+  "dur": "For high fever (കൂടിയ പനിക്ക്)",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_003",
+  "cat": "Medication",
+  "name": "Cap Nexpro IT 150",
+  "dose": "1 cap",
+  "freq": "Once morning empty stomach",
+  "dur": "7 days",
+  "cls": "PPI / Antacid",
+  "unclear": false
+ },
+ {
+  "rx": "RX_003",
+  "cat": "Medication",
+  "name": "Neurokind LC",
+  "dose": "1 tab",
+  "freq": "Once daily",
+  "dur": "1 month",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_003",
+  "cat": "Medication",
+  "name": "Shelcal 500",
+  "dose": "1 tab",
+  "freq": "Twice daily (1 x 2)",
+  "dur": "1 month",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_003",
+  "cat": "Medication",
+  "name": "D3must 60k",
+  "dose": "1 tab / sachet",
+  "freq": "Once weekly",
+  "dur": "4 weeks",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_003",
+  "cat": "Medication",
+  "name": "Lactihep plus",
+  "dose": "10 mL",
+  "freq": "Once at night x 2 days/week",
+  "dur": "SOS",
+  "cls": "Laxative",
+  "unclear": false
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "Gaphamet Cell",
+  "dose": "UNCLEAR",
+  "freq": "UNCLEAR",
+  "dur": "UNCLEAR",
+  "cls": "Medication (unclassified)",
+  "unclear": true
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "Altravday",
+  "dose": "1",
+  "freq": "1 time daily",
+  "dur": "Not specified",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "Bro D3 Plus",
+  "dose": "UNCLEAR",
+  "freq": "Not specified",
+  "dur": "Not specified",
+  "cls": "Respiratory / Cold",
+  "unclear": true
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "Gold Cal D",
+  "dose": "UNCLEAR",
+  "freq": "Not specified",
+  "dur": "Not specified",
+  "cls": "Vitamin / Supplement",
+  "unclear": true
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "Feburic 80",
+  "dose": "1",
+  "freq": "1 time daily",
+  "dur": "Not specified",
+  "cls": "Urate-lowering",
+  "unclear": false
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "doxite 10/20 BF",
+  "dose": "UNCLEAR",
+  "freq": "Before food",
+  "dur": "Not specified",
+  "cls": "Medication (unclassified)",
+  "unclear": true
+ },
+ {
+  "rx": "RX_004",
+  "cat": "Medication",
+  "name": "Tryptans 10mg",
+  "dose": "10mg",
+  "freq": "2 times daily (1-0-1)",
+  "dur": "Not specified",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_005",
+  "cat": "Medication",
+  "name": "T. Ultmacet",
+  "dose": "1 tab",
+  "freq": "1-1-1",
+  "dur": "7 days",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_005",
+  "cat": "Medication",
+  "name": "Prohance HP",
+  "dose": "2tsf",
+  "freq": "1-1-1",
+  "dur": "1 month",
+  "cls": "Cardio-renal",
+  "unclear": false
+ },
+ {
+  "rx": "RX_005",
+  "cat": "Medication",
+  "name": "Syp. A to Z",
+  "dose": "1tsf",
+  "freq": "1-0-1",
+  "dur": "1 month",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_005",
+  "cat": "Medication",
+  "name": "Syp. Duphalac",
+  "dose": "20ml",
+  "freq": "Hs (at bedtime)",
+  "dur": "Not specified",
+  "cls": "Laxative",
+  "unclear": false
+ },
+ {
+  "rx": "RX_005",
+  "cat": "Non-Medication",
+  "name": "Jaw stretcher",
+  "dose": "10 times",
+  "freq": "Twice a day",
+  "dur": "Not specified",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_006",
+  "cat": "Medication",
+  "name": "ACYCLOVIR",
+  "dose": "800mg",
+  "freq": "5 times a day",
+  "dur": "7 DAYS",
+  "cls": "Antiviral",
+  "unclear": false
+ },
+ {
+  "rx": "RX_006",
+  "cat": "Medication",
+  "name": "SOFRADEX OINTMENT",
+  "dose": "UNCLEAR",
+  "freq": "BD",
+  "dur": "7 DAYS",
+  "cls": "Corticosteroid",
+  "unclear": true
+ },
+ {
+  "rx": "RX_007",
+  "cat": "Medication",
+  "name": "Cap. Osyplyn / Caldob",
+  "dose": "1 cap",
+  "freq": "1 - 0 - 1",
+  "dur": "As directed",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_007",
+  "cat": "Medication",
+  "name": "Tab Paramat 650",
+  "dose": "1 tab",
+  "freq": "1 - 0 - 1",
+  "dur": "For pain relief",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_007",
+  "cat": "Medication",
+  "name": "Tab Vetrenex / Cobadex C28",
+  "dose": "1 tab",
+  "freq": "1 - 0 - 0",
+  "dur": "Daily supplement",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_007",
+  "cat": "Non-Medication",
+  "name": "Elastic Stockings",
+  "dose": "1 pair",
+  "freq": "Daily wear",
+  "dur": "Compression for varicose veins",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_008",
+  "cat": "Medication",
+  "name": "Tab Tazloc-CT (40/12.5)",
+  "dose": "1 tab",
+  "freq": "1 OD at 9 AM",
+  "dur": "Antihypertensive",
+  "cls": "Cardio-renal",
+  "unclear": false
+ },
+ {
+  "rx": "RX_008",
+  "cat": "Medication",
+  "name": "Tab Amlodip 10mg",
+  "dose": "1 tab",
+  "freq": "1 OD at 5 PM",
+  "dur": "Antihypertensive",
+  "cls": "Cardio-renal",
+  "unclear": false
+ },
+ {
+  "rx": "RX_008",
+  "cat": "Medication",
+  "name": "Tab Pantocid 40mg",
+  "dose": "1 tab",
+  "freq": "1 OD before breakfast",
+  "dur": "Antacid / PPI",
+  "cls": "PPI / Antacid",
+  "unclear": false
+ },
+ {
+  "rx": "RX_008",
+  "cat": "Medication",
+  "name": "Proviron-HP Powder",
+  "dose": "2 tsp",
+  "freq": "1 - 0 - 1",
+  "dur": "1 month",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_008",
+  "cat": "Non-Medication",
+  "name": "Stop Alcohol & Smoking",
+  "dose": "-",
+  "freq": "Immediate",
+  "dur": "Strict lifestyle restriction",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_009",
+  "cat": "Medication",
+  "name": "Tab Sizodon Plus",
+  "dose": "1 tab",
+  "freq": "1 Morning - 1 Night",
+  "dur": "6 months",
+  "cls": "Psychotropic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_009",
+  "cat": "Medication",
+  "name": "Tab Qutipin 200mg",
+  "dose": "1 tab",
+  "freq": "1 Night",
+  "dur": "6 months",
+  "cls": "Psychotropic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_009",
+  "cat": "Medication",
+  "name": "Tab Ativan (Lorazepam) 2mg",
+  "dose": "1 tab",
+  "freq": "1 Night",
+  "dur": "6 months",
+  "cls": "Psychotropic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_009",
+  "cat": "Medication",
+  "name": "Tab Rivotril 0.5mg (Clonazepam)",
+  "dose": "1 tab",
+  "freq": "1 Night",
+  "dur": "6 months",
+  "cls": "Psychotropic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_009",
+  "cat": "Medication",
+  "name": "Tab SERTA 50mg",
+  "dose": "1 tab",
+  "freq": "1 Night",
+  "dur": "6 months",
+  "cls": "Psychotropic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_010",
+  "cat": "Medication",
+  "name": "Tab. Augmentin 625mg",
+  "dose": "1 tab",
+  "freq": "1 - 0 - 1 (After meals)",
+  "dur": "5 days",
+  "cls": "Antibiotic",
+  "unclear": false
+ },
+ {
+  "rx": "RX_010",
+  "cat": "Medication",
+  "name": "Tab. Enzoflam",
+  "dose": "1 tab",
+  "freq": "1 - 0 - 1 (After meals)",
+  "dur": "5 days",
+  "cls": "Analgesic / NSAID",
+  "unclear": false
+ },
+ {
+  "rx": "RX_010",
+  "cat": "Medication",
+  "name": "Tab. Pan D 40mg",
+  "dose": "1 tab",
+  "freq": "1 - 0 - 0 (Before meals)",
+  "dur": "5 days",
+  "cls": "PPI / Antacid",
+  "unclear": false
+ },
+ {
+  "rx": "RX_010",
+  "cat": "Non-Medication",
+  "name": "Hexigel gum paint",
+  "dose": "Topical",
+  "freq": "1 - 0 - 1 Massage",
+  "dur": "1 week",
+  "cls": "Supportive care",
+  "unclear": false
+ },
+ {
+  "rx": "RX_011",
+  "cat": "Medication",
+  "name": "Tab. Tebi",
+  "dose": "टेबी) (50 mg (५० मिग्रा)",
+  "freq": "1 time daily (दिन में एक बार)",
+  "dur": "15 days (१५ दिन)",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_011",
+  "cat": "Medication",
+  "name": "Cap. Menpro",
+  "dose": "मेनप्रो) (1 capsule (१ कैप्सूल)",
+  "freq": "1 time daily (दिन में एक बार)",
+  "dur": "15 days (१५ दिन)",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ },
+ {
+  "rx": "RX_011",
+  "cat": "Medication",
+  "name": "Tab. Amlolon",
+  "dose": "अम्लोलोन) (05 mg (०५ मिग्रा)",
+  "freq": "1 time daily (दिन में एक बार)",
+  "dur": "15 days (१५ दिन)",
+  "cls": "Cardio-renal",
+  "unclear": false
+ },
+ {
+  "rx": "RX_011",
+  "cat": "Medication",
+  "name": "UNCLEAR",
+  "dose": "2 ml (२ मिली)",
+  "freq": "1 time daily (दिन में एक बार)",
+  "dur": "15 days (१५ दिन)",
+  "cls": "Unclear (illegible)",
+  "unclear": true
+ },
+ {
+  "rx": "RX_011",
+  "cat": "Medication",
+  "name": "UNCLEAR",
+  "dose": "100 mg (१०० मिग्रा)",
+  "freq": "1 time daily (दिन में एक बार)",
+  "dur": "15 days (१५ दिन)",
+  "cls": "Unclear (illegible)",
+  "unclear": true
+ },
+ {
+  "rx": "RX_011",
+  "cat": "Medication",
+  "name": "Syrup Liver",
+  "dose": "लिवर) (2 teaspoons (दो चम्मच)",
+  "freq": "Morning and evening (सुबह शाम)",
+  "dur": "15 days (१५ दिन)",
+  "cls": "Vitamin / Supplement",
+  "unclear": false
+ }
+]

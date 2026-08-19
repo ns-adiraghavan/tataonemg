@@ -134,7 +134,7 @@ export async function scanImage(
       generationConfig: {
         temperature: 0,
         responseMimeType: "application/json",
-        maxOutputTokens: 4096, // notebook hit the cap on dense scripts → raised
+        maxOutputTokens: 8192, // notebook hit the cap on dense scripts → raised
       },
     }),
   });

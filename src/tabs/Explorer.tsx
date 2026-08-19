@@ -6,24 +6,34 @@ import type { Rx } from "../types";
 
 type FilterKey = "all" | "chronic" | "review" | "refill" | "handwritten" | "multilingual";
 
-const FILTERS: { k: FilterKey; label: string; f: (p: Rx) => boolean }[] = [
-  { k: "all", label: "All", f: () => true },
-  { k: "chronic", label: "Chronic", f: (p) => p.case === "Chronic" },
-  { k: "review", label: "Needs review", f: (p) => p.review },
-  { k: "refill", label: "Refill candidate", f: (p) => p.refill },
-  { k: "handwritten", label: "Handwritten", f: (p) => /handwritten/i.test(p.form) },
-  { k: "multilingual", label: "Hindi / mixed", f: (p) => /hindi/i.test(p.lang) },
+const FILTERS: { k: FilterKey; label: string; f: (p: Rx) => boolean; def: string }[] = [
+  { k: "all", label: "All", f: () => true, def: "Every prescription in the corpus, unfiltered." },
+  { k: "chronic", label: "Chronic", f: (p) => p.case === "Chronic", def: "Case type resolved to Chronic by the extraction engine — long-duration conditions requiring repeat therapy." },
+  { k: "review", label: "Needs review", f: (p) => p.review, def: "At least one UNCLEAR field or medicine flagged — extraction engine confidence below threshold." },
+  { k: "refill", label: "Refill candidate", f: (p) => p.refill, def: "One or more medications with a duration of ≥ 1 month or marked 'continuous' — eligible for auto-refill or subscription." },
+  { k: "handwritten", label: "Handwritten", f: (p) => /handwritten/i.test(p.form), def: "Form type = handwritten — tests OCR engine robustness on unstructured doctor scripts." },
+  { k: "multilingual", label: "Hindi / mixed", f: (p) => /hindi/i.test(p.lang), def: "Language detected as Hindi or Hinglish (mixed script) — validates transliteration and translation pipeline." },
+];
+
+const PLAYS_DEF = [
+  { k: "Refill", def: "Any medication with duration ≥ 1 month or marked continuous." },
+  { k: "Poly", def: "Script carries 5 or more distinct medications." },
+  { k: "Dx", def: "A diagnostic test item OR a recorded lab value is present." },
+  { k: "Review", def: "At least one field or medicine returned UNCLEAR by the engine." },
 ];
 
 export function Explorer({ d }: { d: AllData }) {
   const P = d.prescriptions;
   const [filter, setFilter] = useState<FilterKey>("all");
   const [open, setOpen] = useState<string | null>(null);
+  const [showDefs, setShowDefs] = useState(false);
 
   const rows = useMemo(
     () => P.filter(FILTERS.find((f) => f.k === filter)!.f),
     [P, filter]
   );
+
+  const activeDef = FILTERS.find((f) => f.k === filter)!.def;
 
   const exportRx = () => {
     const cols = [
@@ -67,7 +77,7 @@ export function Explorer({ d }: { d: AllData }) {
     <div className="view on">
       <div className="panel">
         <div className="sec-h">
-          <span className="n">03</span>
+          <span className="n">04</span>
           <h2>Prescription Explorer</h2>
         </div>
         <p className="sec-sub">
@@ -75,6 +85,7 @@ export function Explorer({ d }: { d: AllData }) {
           record; export the current filtered view as prescription-level or item-level CSV.
         </p>
 
+        {/* ── Filters + export ── */}
         <div className="filters">
           <span className="flabel">FILTER</span>
           {FILTERS.map((f) => (
@@ -86,6 +97,13 @@ export function Explorer({ d }: { d: AllData }) {
               {f.label} · {P.filter(f.f).length}
             </button>
           ))}
+          <button
+            className="def-toggle"
+            onClick={() => setShowDefs((s) => !s)}
+            title="Show slicer definitions"
+          >
+            {showDefs ? "▲ Hide definitions" : "▼ Slicer definitions"}
+          </button>
           <div className="dlgroup">
             <button className="dlbtn" onClick={exportRx} disabled={!rows.length}>
               ↓ Prescriptions CSV
@@ -95,6 +113,37 @@ export function Explorer({ d }: { d: AllData }) {
             </button>
           </div>
         </div>
+
+        {/* ── Active filter definition ── */}
+        {showDefs && (
+          <div className="slicer-defs">
+            <div className="slicer-title">Filter definitions</div>
+            <div className="slicer-grid">
+              {FILTERS.filter(f => f.k !== "all").map((f) => (
+                <div key={f.k} className={`slicer-item${filter === f.k ? " active" : ""}`}>
+                  <div className="slicer-k">{f.label}</div>
+                  <div className="slicer-v">{f.def}</div>
+                </div>
+              ))}
+            </div>
+            <div className="slicer-title" style={{ marginTop: 12 }}>Row flag definitions</div>
+            <div className="slicer-grid">
+              {PLAYS_DEF.map((p) => (
+                <div key={p.k} className="slicer-item">
+                  <div className="slicer-k">{p.k}</div>
+                  <div className="slicer-v">{p.def}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Active filter hint ── */}
+        {filter !== "all" && (
+          <div className="filter-hint">
+            <b>{FILTERS.find(f => f.k === filter)!.label}:</b> {activeDef}
+          </div>
+        )}
 
         <table className="xtab">
           <thead>

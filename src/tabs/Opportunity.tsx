@@ -1,8 +1,6 @@
-import { useState } from "react";
 import type { AllData } from "../data/store";
 import { computeSummary } from "../lib/summary";
 import { Info } from "../components/ui";
-import { ageSex, csvCell, medLine, download } from "../lib/csv";
 import type { Rx } from "../types";
 
 interface Play {
@@ -12,203 +10,200 @@ interface Play {
   desc: string;
   rule: string;
   formulaKey: string;
+  icon: string;
+  est: string; // estimated revenue/opportunity label
 }
 
 const PLAYS: Play[] = [
   {
-    k: "refill", t: "Refill & subscription", f: (p) => p.refill,
-    desc: "Standing-therapy scripts eligible for an auto-refill / subscription nudge.",
+    k: "refill", t: "Refill & Subscription", f: (p) => p.refill, icon: "↻",
+    desc: "Standing-therapy scripts eligible for an auto-refill or subscription nudge — highest lifetime value per patient.",
     rule: "any medication runs ≥ 1 month or continuous", formulaKey: "refill",
+    est: "Avg 3–6 repeat orders / patient / year",
   },
   {
-    k: "chronic", t: "Chronic-care program", f: (p) => p.case === "Chronic",
-    desc: "Long-term conditions suited to a managed chronic-care enrolment.",
+    k: "chronic", t: "Chronic Care", f: (p) => p.case === "Chronic", icon: "♥",
+    desc: "Long-term conditions suited to a managed chronic-care enrolment with adherence tracking and refill reminders.",
     rule: "case type resolves to Chronic", formulaKey: "case",
+    est: "2–4× higher basket vs acute scripts",
   },
   {
-    k: "adherence", t: "Adherence / pill-pack", f: (p) => p.poly,
-    desc: "High medication counts where an adherence pack reduces missed doses.",
+    k: "adherence", t: "Adherence / Pill-pack", f: (p) => p.poly, icon: "⬡",
+    desc: "High medication counts where an adherence pack reduces missed doses and boosts fulfillment rate.",
     rule: "script carries ≥ 5 medications", formulaKey: "poly",
+    est: "15–25% uplift in fill-through rate",
   },
   {
-    k: "diagnostics", t: "Diagnostics cross-sell", f: (p) => p.diagnostics,
-    desc: "Ordered tests or recorded labs that open a diagnostics booking.",
+    k: "diagnostics", t: "Diagnostics Cross-sell", f: (p) => p.diagnostics, icon: "⊕",
+    desc: "Ordered tests or recorded labs that open a same-session diagnostics booking — closes the prescription-to-lab loop.",
     rule: "a test item OR a lab value is present", formulaKey: "diagnostics",
+    est: "₹300–1,200 incremental per order",
   },
 ];
 
 const flagsOf = (p: Rx) => PLAYS.reduce((n, pl) => n + (pl.f(p) ? 1 : 0), 0);
 
+// Top medicines by frequency across all prescriptions
+function topMeds(P: Rx[], n = 8) {
+  const counts: Record<string, number> = {};
+  P.forEach((p) =>
+    (p.items ?? []).filter((it) => it.cat === "Medication").forEach((it) => {
+      const k = it.name.replace(/^(tab\.|cap\.|inj\.|syp\.|syr\.|oint\.)\s*/i, "").trim();
+      counts[k] = (counts[k] || 0) + 1;
+    })
+  );
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n);
+}
+
 export function Opportunity({ d }: { d: AllData }) {
   const P = d.prescriptions;
   const S = computeSummary(P);
-  const [selected, setSelected] = useState<Set<string>>(
-    new Set(PLAYS.map((p) => p.k))
-  );
 
   const addr = P.filter((p) => flagsOf(p) >= 1).length;
   const multi = P.filter((p) => flagsOf(p) >= 2).length;
   const fired = PLAYS.reduce((s, pl) => s + P.filter(pl.f).length, 0);
   const pct = Math.round((addr / (S.n_pres || 1)) * 100);
 
-  const matched = P.filter((p) =>
-    PLAYS.some((pl) => selected.has(pl.k) && pl.f(p))
-  );
-  const matchedItems = matched.reduce((s, p) => s + (p.items?.length ?? 0), 0);
-
-  const toggle = (k: string) => {
-    const next = new Set(selected);
-    next.has(k) ? next.delete(k) : next.add(k);
-    setSelected(next);
-  };
-
-  const tagsFor = (p: Rx) =>
-    PLAYS.filter((pl) => pl.f(p)).map((pl) => pl.t).join("; ");
-
-  const exportRx = () => {
-    const cols = [
-      "Rx ID", "Date", "Patient Name", "Age / Sex", "Hospital / Clinic",
-      "Doctor", "Qualifying Programs", "Diagnosis", "Vitals / Labs",
-      "Prescribed Items", "Follow-up / Advice",
-    ];
-    const lines = [cols.map(csvCell).join(",")];
-    matched.forEach((p) =>
-      lines.push(
-        [
-          p.rx, p.date, p.patient, ageSex(p), p.hospital, p.doctor, tagsFor(p),
-          p.diagnosis, p.vitals, (p.items ?? []).map(medLine).join("\n"), p.followup,
-        ].map(csvCell).join(",")
-      )
-    );
-    download(lines, "tata1mg-opportunity-prescriptions");
-  };
-
-  const exportItems = () => {
-    const cols = [
-      "Rx ID", "Patient Name", "Qualifying Programs", "Category",
-      "Item", "Dose", "Frequency", "Duration", "Class",
-    ];
-    const lines = [cols.map(csvCell).join(",")];
-    matched.forEach((p) =>
-      (p.items ?? []).forEach((it) =>
-        lines.push(
-          [p.rx, p.patient, tagsFor(p), it.cat, it.name, it.dose, it.freq, it.dur, it.cls]
-            .map(csvCell).join(",")
-        )
-      )
-    );
-    download(lines, "tata1mg-opportunity-items");
-  };
-
   const areas = Object.keys(S.by_area);
+  const meds = topMeds(P);
+  const maxMed = meds[0]?.[1] ?? 1;
+
+  // Patient segments: chronic + multi-flag = "priority"
+  const priority = P.filter((p) => flagsOf(p) >= 2);
+  const chronicOnly = P.filter((p) => p.case === "Chronic" && flagsOf(p) < 2);
+  const acuteAction = P.filter((p) => p.case !== "Chronic" && flagsOf(p) >= 1);
 
   return (
     <div className="view on">
       <div className="panel">
         <div className="sec-h">
-          <span className="n">04</span>
-          <h2>Business Opportunity</h2>
+          <span className="n">02</span>
+          <h2>Commercial Plays</h2>
         </div>
         <p className="sec-sub">
-          Four commercial programs, each matched automatically against the structured extraction —
-          no script is tagged by hand. Thresholds are policy settings Tata 1mg controls; change one
-          and every count and the matrix below recompute.
+          Four revenue programs matched automatically against the structured extraction — no script is
+          tagged by hand. Thresholds are policy settings Tata 1mg controls; change one and every count
+          and the matrix below recompute instantly.
         </p>
 
+        {/* ── Program cards ── */}
         <div className="opp-grid">
           {PLAYS.map((pl) => {
             const hits = P.filter(pl.f);
             return (
               <div className="opp" key={pl.k}>
+                <div className="opp-icon">{pl.icon}</div>
                 <div className="big">
                   {hits.length}
                   <small>/{S.n_pres}</small>
                 </div>
                 <h3>{pl.t}</h3>
                 <p>{pl.desc}</p>
+                <div className="opp-est">{pl.est}</div>
                 <div className="rxlist">
                   {hits.map((p) => (
                     <span key={p.rx}>{p.rx}</span>
                   ))}
                 </div>
                 <div className="rule">
-                  RULE: {pl.rule} <Info def={d.formulas[pl.formulaKey]} />
+                  Rule: {pl.rule} <Info def={d.formulas[pl.formulaKey]} />
                 </div>
               </div>
             );
           })}
         </div>
 
+        {/* ── Summary band ── */}
         <div className="oppctx">
           <div className="octx">
             <div className="k">Addressable scripts</div>
             <div className="v">
-              {addr}
-              <small>/{S.n_pres}</small>
+              {addr}<small>/{S.n_pres}</small>
             </div>
             <div className="cap">
-              At least one program fits — <b>{pct}%</b> of the corpus is commercially actionable from
-              the extraction alone.
+              <b>{pct}%</b> of the corpus is commercially actionable from the extraction alone.
             </div>
           </div>
           <div className="octx">
-            <div className="k">Program flags fired</div>
+            <div className="k">Total program flags</div>
             <div className="v">{fired}</div>
             <div className="cap">
-              Total play matches across the four programs; a single script can qualify for several.
+              Across four plays — a single script can qualify for several simultaneously.
             </div>
           </div>
           <div className="octx">
             <div className="k">Multi-program scripts</div>
             <div className="v">{multi}</div>
             <div className="cap">
-              Qualify for two or more plays — the highest-value patients, and the ones to sequence
-              first.
+              Qualify for two or more plays — highest-value patients; sequence these first.
+            </div>
+          </div>
+          <div className="octx">
+            <div className="k">Specialties covered</div>
+            <div className="v">{S.n_specialties}</div>
+            <div className="cap">
+              Programs fire across all specialties — not limited to a single therapeutic area.
             </div>
           </div>
         </div>
 
-        <div className="oppdl">
-          <div className="dh">
-            <span className="n">EXPORT</span>
-            <h3>Program-targeted lists</h3>
+        {/* ── Top medicines ── */}
+        <div className="panel" style={{ marginTop: 16 }}>
+          <div className="sec-h">
+            <span className="n">▦</span>
+            <h2 style={{ fontSize: 15 }}>Top medicines by frequency</h2>
           </div>
-          <p className="dsub">
-            Select the programs you want, then export the matching patients as a prescription-level
-            or item-level CSV — ready to hand to the outreach team.
+          <p className="sec-sub" style={{ marginBottom: 14 }}>
+            Most-prescribed molecules across the corpus — refill and subscription candidates in rank order.
           </p>
-          <div className="row">
-            {PLAYS.map((pl) => (
-              <button
-                key={pl.k}
-                className={`fchip${selected.has(pl.k) ? " on" : ""}`}
-                onClick={() => toggle(pl.k)}
-              >
-                {pl.t} · {P.filter(pl.f).length}
-              </button>
+          <div className="med-bars">
+            {meds.map(([name, count]) => (
+              <div className="med-row" key={name}>
+                <div className="med-name">{name}</div>
+                <div className="med-track">
+                  <div className="med-fill" style={{ width: `${(count / maxMed) * 100}%` }} />
+                </div>
+                <div className="med-count">{count}×</div>
+              </div>
             ))}
-            <div className="dlgroup">
-              <button className="dlbtn" onClick={exportRx} disabled={!matched.length}>
-                ↓ Prescriptions
-              </button>
-              <button className="dlbtn" onClick={exportItems} disabled={!matched.length}>
-                ↓ Items
-              </button>
-            </div>
-          </div>
-          <div className="selcnt">
-            {selected.size ? (
-              <>
-                Current selection · <b>{matched.length}</b> script{matched.length === 1 ? "" : "s"} ·{" "}
-                <b>{matchedItems}</b> line-item{matchedItems === 1 ? "" : "s"}
-              </>
-            ) : (
-              "Select at least one program to export."
-            )}
           </div>
         </div>
 
-        <div className="panel matrix" style={{ marginTop: 20 }}>
+        {/* ── Patient segmentation ── */}
+        <div className="panel" style={{ marginTop: 16 }}>
+          <div className="sec-h">
+            <span className="n">▦</span>
+            <h2 style={{ fontSize: 15 }}>Patient segmentation</h2>
+          </div>
+          <p className="sec-sub" style={{ marginBottom: 14 }}>
+            Three tiers of commercial priority — derived purely from the extraction, no manual review.
+          </p>
+          <div className="seg-grid">
+            <div className="seg hi">
+              <div className="seg-label">Priority</div>
+              <div className="seg-n">{priority.length}</div>
+              <div className="seg-desc">Multi-program match — chronic or poly-med + at least one additional flag. Highest CLV; sequence for outreach first.</div>
+              <div className="seg-list">{priority.map(p => <span key={p.rx}>{p.rx}</span>)}</div>
+            </div>
+            <div className="seg md">
+              <div className="seg-label">Chronic — single flag</div>
+              <div className="seg-n">{chronicOnly.length}</div>
+              <div className="seg-desc">Long-term condition, one qualifying program. Enrol in chronic-care; layer refill nudge at next dispense.</div>
+              <div className="seg-list">{chronicOnly.map(p => <span key={p.rx}>{p.rx}</span>)}</div>
+            </div>
+            <div className="seg lo">
+              <div className="seg-label">Acute — actionable</div>
+              <div className="seg-n">{acuteAction.length}</div>
+              <div className="seg-desc">Acute case with at least one program match (diagnostics or adherence). Single-touch opportunity — diagnostics booking or pill-pack offer.</div>
+              <div className="seg-list">{acuteAction.map(p => <span key={p.rx}>{p.rx}</span>)}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Specialty matrix ── */}
+        <div className="panel matrix" style={{ marginTop: 16 }}>
           <div className="sec-h">
             <span className="n">▦</span>
             <h2 style={{ fontSize: 15 }}>Program coverage by specialty</h2>
@@ -245,9 +240,7 @@ export function Opportunity({ d }: { d: AllData }) {
           </table>
           <p className="note">
             Every flag is computed directly from the structured extraction — no prescription is
-            tagged by hand — so each play runs automatically across the full volume. The thresholds
-            (duration bands, medication count) are policy settings the Tata 1mg team controls; change
-            one and every count, badge, and this matrix recompute.
+            tagged by hand. Thresholds are policy settings the Tata 1mg team controls.
           </p>
         </div>
       </div>

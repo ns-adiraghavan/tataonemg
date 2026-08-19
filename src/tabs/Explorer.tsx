@@ -66,6 +66,7 @@ export function Explorer({ d }: { d: AllData }) {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [open, setOpen] = useState<string | null>(null);
   const [showDefs, setShowDefs] = useState(false);
+  const [showProgDefs, setShowProgDefs] = useState(false);
   const [progSel, setProgSel] = useState<Set<string>>(new Set());
 
   const rows = useMemo(
@@ -198,9 +199,18 @@ export function Explorer({ d }: { d: AllData }) {
 
         {/* ── Program-targeted lists ── */}
         <div className="prog-block">
-          <div className="prog-header">
-            <span className="prog-title">Program-targeted lists</span>
-            <span className="prog-sub">Select one or more programs to narrow the table and export</span>
+          <div className="prog-header-row">
+            <div>
+              <span className="prog-title">Program-targeted lists</span>
+              <span className="prog-sub">Select one or more programs to narrow the table and export</span>
+            </div>
+            <button
+              className="def-toggle"
+              onClick={() => setShowProgDefs((s) => !s)}
+              title="Show program definitions"
+            >
+              {showProgDefs ? "▲ Hide definitions" : "▼ Program definitions"}
+            </button>
           </div>
           <div className="prog-chips">
             {PROGRAMS.map((pr) => {
@@ -220,16 +230,18 @@ export function Explorer({ d }: { d: AllData }) {
               );
             })}
           </div>
-          {/* Program definitions */}
-          <div className="prog-defs">
-            {PROGRAMS.map((pr) => (
-              <div key={pr.k} className={`prog-def-item${progSel.has(pr.k) ? " active" : ""}`}>
-                <span className="prog-def-dot" style={{ background: pr.color }} />
-                <span className="prog-def-label">{pr.label}:</span>
-                <span className="prog-def-text">{pr.def}</span>
-              </div>
-            ))}
-          </div>
+          {/* Program definitions — collapsed by default */}
+          {showProgDefs && (
+            <div className="prog-defs">
+              {PROGRAMS.map((pr) => (
+                <div key={pr.k} className={`prog-def-item${progSel.has(pr.k) ? " active" : ""}`}>
+                  <span className="prog-def-dot" style={{ background: pr.color }} />
+                  <span className="prog-def-label">{pr.label}:</span>
+                  <span className="prog-def-text">{pr.def}</span>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="prog-export-bar">
             <span className="prog-sel-count">
               Current selection · <b>{progRows.length} scripts</b> · <b>{totalItems} line-items</b>

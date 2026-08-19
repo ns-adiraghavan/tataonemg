@@ -16,9 +16,9 @@ const base = import.meta.env.BASE_URL;
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "extract", label: "Extraction & Quality" },
+  { key: "opportunity", label: "Commercial Plays" },
   { key: "analytics", label: "Clinical Analytics" },
   { key: "explorer", label: "Prescription Explorer" },
-  { key: "opportunity", label: "Business Opportunity" },
   { key: "livescan", label: "Live Scan" },
 ];
 

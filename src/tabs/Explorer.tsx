@@ -22,18 +22,75 @@ const PLAYS_DEF = [
   { k: "Review", def: "At least one field or medicine returned UNCLEAR by the engine." },
 ];
 
+interface ProgDef {
+  k: string;
+  label: string;
+  color: string;
+  f: (p: Rx) => boolean;
+  def: string;
+}
+
+const PROGRAMS: ProgDef[] = [
+  {
+    k: "refill",
+    label: "Refill & subscription",
+    color: "#2563eb",
+    f: (p) => p.refill,
+    def: "Standing-therapy scripts with ≥ 1 month duration — highest lifetime value per patient. Eligible for auto-refill or subscription nudge.",
+  },
+  {
+    k: "chronic",
+    label: "Chronic-care program",
+    color: "#16a34a",
+    f: (p) => p.case === "Chronic",
+    def: "Long-term conditions suited to a managed chronic-care enrolment with adherence tracking and refill reminders.",
+  },
+  {
+    k: "poly",
+    label: "Adherence / pill-pack",
+    color: "#9333ea",
+    f: (p) => p.poly,
+    def: "High medication counts (≥ 5 meds) where an adherence pack reduces missed doses and boosts fill-through rate.",
+  },
+  {
+    k: "diagnostics",
+    label: "Diagnostics cross-sell",
+    color: "#ea580c",
+    f: (p) => p.diagnostics,
+    def: "Ordered tests or recorded labs — opens a same-session diagnostics booking and closes the prescription-to-lab loop.",
+  },
+];
+
 export function Explorer({ d }: { d: AllData }) {
   const P = d.prescriptions;
   const [filter, setFilter] = useState<FilterKey>("all");
   const [open, setOpen] = useState<string | null>(null);
   const [showDefs, setShowDefs] = useState(false);
+  const [progSel, setProgSel] = useState<Set<string>>(new Set());
 
   const rows = useMemo(
     () => P.filter(FILTERS.find((f) => f.k === filter)!.f),
     [P, filter]
   );
 
+  // Apply program filters on top of slicer filter
+  const progRows = useMemo(() => {
+    if (progSel.size === 0) return rows;
+    return rows.filter((p) =>
+      PROGRAMS.filter((pr) => progSel.has(pr.k)).some((pr) => pr.f(p))
+    );
+  }, [rows, progSel]);
+
   const activeDef = FILTERS.find((f) => f.k === filter)!.def;
+
+  const toggleProg = (k: string) => {
+    setProgSel((prev) => {
+      const next = new Set(prev);
+      if (next.has(k)) next.delete(k);
+      else next.add(k);
+      return next;
+    });
+  };
 
   const exportRx = () => {
     const cols = [
@@ -43,7 +100,7 @@ export function Explorer({ d }: { d: AllData }) {
       "Extraction Quality", "Follow-up / Advice",
     ];
     const lines = [cols.map(csvCell).join(",")];
-    rows.forEach((p) => {
+    progRows.forEach((p) => {
       lines.push(
         [
           p.rx, p.date, p.patient, ageSex(p), p.hospital, p.doctor, p.diagnosis, p.vitals,
@@ -61,7 +118,7 @@ export function Explorer({ d }: { d: AllData }) {
       "Dose / Form", "Frequency / Timing", "Duration / Instructions", "Therapeutic Class",
     ];
     const lines = [cols.map(csvCell).join(",")];
-    rows.forEach((p) =>
+    progRows.forEach((p) =>
       (p.items ?? []).forEach((it) =>
         lines.push(
           [p.rx, p.patient, it.cat, it.name, it.dose, it.freq, it.dur, it.cls]
@@ -72,6 +129,8 @@ export function Explorer({ d }: { d: AllData }) {
     );
     download(lines, "tata1mg-items-breakdown");
   };
+
+  const totalItems = progRows.reduce((s, p) => s + (p.items?.length ?? 0), 0);
 
   return (
     <div className="view on">
@@ -104,14 +163,6 @@ export function Explorer({ d }: { d: AllData }) {
           >
             {showDefs ? "▲ Hide definitions" : "▼ Slicer definitions"}
           </button>
-          <div className="dlgroup">
-            <button className="dlbtn" onClick={exportRx} disabled={!rows.length}>
-              ↓ Prescriptions CSV
-            </button>
-            <button className="dlbtn" onClick={exportItems} disabled={!rows.length}>
-              ↓ Items CSV
-            </button>
-          </div>
         </div>
 
         {/* ── Active filter definition ── */}
@@ -145,6 +196,55 @@ export function Explorer({ d }: { d: AllData }) {
           </div>
         )}
 
+        {/* ── Program-targeted lists ── */}
+        <div className="prog-block">
+          <div className="prog-header">
+            <span className="prog-title">Program-targeted lists</span>
+            <span className="prog-sub">Select one or more programs to narrow the table and export</span>
+          </div>
+          <div className="prog-chips">
+            {PROGRAMS.map((pr) => {
+              const count = rows.filter(pr.f).length;
+              const on = progSel.has(pr.k);
+              return (
+                <button
+                  key={pr.k}
+                  className={`prog-chip${on ? " on" : ""}`}
+                  style={{
+                    "--prog-color": pr.color,
+                  } as React.CSSProperties}
+                  onClick={() => toggleProg(pr.k)}
+                >
+                  {pr.label} · {count}
+                </button>
+              );
+            })}
+          </div>
+          {/* Program definitions */}
+          <div className="prog-defs">
+            {PROGRAMS.map((pr) => (
+              <div key={pr.k} className={`prog-def-item${progSel.has(pr.k) ? " active" : ""}`}>
+                <span className="prog-def-dot" style={{ background: pr.color }} />
+                <span className="prog-def-label">{pr.label}:</span>
+                <span className="prog-def-text">{pr.def}</span>
+              </div>
+            ))}
+          </div>
+          <div className="prog-export-bar">
+            <span className="prog-sel-count">
+              Current selection · <b>{progRows.length} scripts</b> · <b>{totalItems} line-items</b>
+            </span>
+            <div className="dlgroup">
+              <button className="dlbtn" onClick={exportRx} disabled={!progRows.length}>
+                ↓ Prescriptions CSV
+              </button>
+              <button className="dlbtn" onClick={exportItems} disabled={!progRows.length}>
+                ↓ Items CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
         <table className="xtab">
           <thead>
             <tr>
@@ -158,7 +258,7 @@ export function Explorer({ d }: { d: AllData }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((p) => (
+            {progRows.map((p) => (
               <Fragment key={p.rx}>
                 <tr
                   className="main"

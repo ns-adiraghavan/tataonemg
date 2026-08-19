@@ -144,8 +144,7 @@ export default function App() {
             <span>by</span>
             <img src={`${base}netscribes-color.png`} alt="Netscribes" />
             <button
-              className="collapse-btn"
-              style={{ marginLeft: 8 }}
+              className="signout-btn"
               onClick={() => {
                 logout();
                 setSigned(false);

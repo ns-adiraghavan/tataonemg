@@ -43,12 +43,12 @@ export function LiveScan({ d }: { d: AllData }) {
 
   const run = async () => {
     if (!apiKey.trim()) {
-      setStatus({ kind: "err", msg: "Paste a Gemini API key first." });
+      setStatus({ kind: "err", msg: "Paste your password first." });
       return;
     }
     setResult(null);
     setReading(true);
-    setStatus({ kind: "run", msg: "Extracting with gemini-2.5-flash…" });
+    setStatus({ kind: "run", msg: "Extracting…" });
     try {
       let b64: string, mime: string;
       if (upload) {
@@ -87,13 +87,12 @@ export function LiveScan({ d }: { d: AllData }) {
         <p className="sec-sub">
           This runs the <b>same extraction engine</b> live in your browser — pick one of the corpus
           scans or drop a brand-new prescription image, and watch the structured fields come back
-          from <code>gemini-2.5-flash</code>. Nothing here is saved; it's proof the pipeline is real,
-          not pre-baked.
+          from <code>our engine</code>. 
         </p>
 
         <div className="ls-controls">
           <div className="ls-key">
-            <label>Gemini API key</label>
+            <label>Password</label>
             <input
               type="password"
               value={apiKey}
@@ -116,8 +115,7 @@ export function LiveScan({ d }: { d: AllData }) {
           </button>
         </div>
         <div className="ls-keynote">
-          Your key never leaves the browser tab and is never persisted. This is the demo build you
-          drive — don't ship it to a client with a key embedded.
+          Your password never leaves the browser tab and is never persisted.
         </div>
 
         <div
@@ -210,7 +208,7 @@ export function LiveScan({ d }: { d: AllData }) {
               </>
             ) : (
               <div className="empty" style={{ paddingTop: 40 }}>
-                Paste your key, choose an image, and hit <b>Run live scan</b> — the extracted fields
+                Paste your password, choose an image, and hit <b>Run live scan</b> — the extracted fields
                 will appear here.
               </div>
             )}

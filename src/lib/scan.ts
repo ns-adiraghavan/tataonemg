@@ -142,15 +142,15 @@ export async function scanImage(
   if (!res.ok) {
     const t = await res.text().catch(() => "");
     if (res.status === 400 && /API_KEY/i.test(t))
-      throw new Error("Invalid API key");
-    throw new Error(`Gemini call failed (${res.status}). ${t.slice(0, 160)}`);
+      throw new Error("Invalid password");
+    throw new Error(`Engine call failed (${res.status}). ${t.slice(0, 160)}`);
   }
 
   const data = await res.json();
   const text: string =
     data?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") ??
     "";
-  if (!text) throw new Error("Empty response from model");
+  if (!text) throw new Error("Empty response from the engine");
 
   const parsed = JSON.parse(firstJsonObject(text)) as ScanResult;
   parsed._review = reviewStatus(parsed);

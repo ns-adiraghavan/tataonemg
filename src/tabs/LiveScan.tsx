@@ -41,7 +41,7 @@ export function LiveScan({ d }: { d: AllData }) {
 
   const run = async () => {
     if (!apiKey.trim()) {
-      setStatus({ kind: "err", msg: "Paste a Gemini API key first." });
+      setStatus({ kind: "err", msg: "Enter the password first." });
       return;
     }
     if (!upload && !pickRx) {
@@ -50,7 +50,7 @@ export function LiveScan({ d }: { d: AllData }) {
     }
     setResult(null);
     setReading(true);
-    setStatus({ kind: "run", msg: "Extracting with gemini-2.5-flash…" });
+    setStatus({ kind: "run", msg: "Extraction engine is running…" });
     try {
       let b64: string, mime: string;
       if (upload) {
@@ -94,12 +94,12 @@ export function LiveScan({ d }: { d: AllData }) {
 
         <div className="ls-controls">
           <div className="ls-key">
-            <label>Gemini API key</label>
+            <label>Password</label>
             <input
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="AIza…  (kept in memory only, never saved)"
+              placeholder="Enter engine password  (kept in memory only, never saved)"
             />
           </div>
           <div className="ls-pick">
@@ -137,8 +137,8 @@ export function LiveScan({ d }: { d: AllData }) {
         </div>
 
         <div className="ls-keynote">
-          Your key never leaves the browser tab and is never persisted. This is the demo build you
-          drive — don't ship it to a client with a key embedded.
+          Your password never leaves the browser tab and is never persisted. This is the demo build
+          you drive — don't ship it to a client with the password embedded.
         </div>
 
         <div className="extract" style={{ marginTop: 18 }}>
@@ -183,32 +183,34 @@ export function LiveScan({ d }: { d: AllData }) {
                   <FF k="Vitals / Labs" v={result["Recorded Vitals / Lab Values"]} full />
                   <FF k="Follow-up / Advice" v={result["Follow-up / Advice"]} full />
                 </div>
-                <table className="itab">
-                  <thead>
-                    <tr>
-                      <th>Item</th>
-                      <th>Dose</th>
-                      <th>Frequency</th>
-                      <th>Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(result["Prescribed Medications, Tests & Interventions"] ?? []).map((m, i) => (
-                      <tr key={i}>
-                        <td>
-                          <span
-                            className="catdot"
-                            style={{ background: CAT_COLORS.Medication }}
-                          />
-                          {m.name}
-                        </td>
-                        <td>{m.dose}</td>
-                        <td>{m.frequency}</td>
-                        <td>{m.duration}</td>
+                <div className="itab-wrap">
+                  <table className="itab">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Dose</th>
+                        <th>Frequency</th>
+                        <th>Duration</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {(result["Prescribed Medications, Tests & Interventions"] ?? []).map((m, i) => (
+                        <tr key={i}>
+                          <td>
+                            <span
+                              className="catdot"
+                              style={{ background: CAT_COLORS.Medication }}
+                            />
+                            {m.name}
+                          </td>
+                          <td>{m.dose}</td>
+                          <td>{m.frequency}</td>
+                          <td>{m.duration}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </>
             ) : (
               <div className="empty" style={{ paddingTop: 40 }}>

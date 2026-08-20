@@ -102,32 +102,34 @@ export function Extraction({ d }: { d: AllData }) {
               </span>
             </div>
 
-            <table className="itab">
-              <thead>
-                <tr>
-                  <th>Item</th>
-                  <th>Dose</th>
-                  <th>Frequency</th>
-                  <th>Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(p.items ?? []).map((it, i) => (
-                  <tr key={i}>
-                    <td>
-                      <span className="catdot" style={{ background: CAT_COLORS[it.cat] }} />
-                      {it.name}
-                      {it.unclear && (
-                        <span className="frag rv" style={{ marginLeft: 6 }}>UNCLEAR</span>
-                      )}
-                    </td>
-                    <td>{it.dose}</td>
-                    <td>{it.freq}</td>
-                    <td>{it.dur}</td>
+            <div className="itab-wrap">
+              <table className="itab">
+                <thead>
+                  <tr>
+                    <th>Item</th>
+                    <th>Dose</th>
+                    <th>Frequency</th>
+                    <th>Duration</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {(p.items ?? []).map((it, i) => (
+                    <tr key={i}>
+                      <td>
+                        <span className="catdot" style={{ background: CAT_COLORS[it.cat] }} />
+                        {it.name}
+                        {it.unclear && (
+                          <span className="frag rv" style={{ marginLeft: 6 }}>UNCLEAR</span>
+                        )}
+                      </td>
+                      <td>{it.dose}</td>
+                      <td>{it.freq}</td>
+                      <td>{it.dur}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

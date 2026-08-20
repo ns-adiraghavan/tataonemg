@@ -14,6 +14,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+code{font-family:var(--mono);font-size:.92em}
 .bgwash{position:fixed;top:-160px;right:-160px;width:620px;height:620px;border-radius:50%;z-index:0;pointer-events:none;
   background:radial-gradient(circle,rgba(255,111,97,.10),transparent 62%)}
 .wrap{position:relative;z-index:2;max-width:1220px;margin:0 auto;padding:0 24px}
@@ -80,8 +81,8 @@ h1 span{color:var(--coral)}
 .sec-sub{font-size:13px;color:var(--muted);margin:2px 0 20px;max-width:74ch}
 
 /* extraction */
-.extract{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:18px}
-.scan{position:relative;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;min-height:430px;display:flex;align-items:center;justify-content:center}
+.extract{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.scan{position:sticky;top:14px;align-self:start;background:var(--bg2);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;min-height:430px;max-height:calc(100vh - 28px);display:flex;align-items:center;justify-content:center}
 .scan img{width:100%;height:100%;object-fit:contain;display:block;max-height:520px}
 .scan .sweep{position:absolute;left:0;right:0;top:-80px;height:70px;pointer-events:none;opacity:0;
   background:linear-gradient(180deg,transparent,rgba(255,111,97,.5) 50%,transparent);box-shadow:0 0 26px rgba(255,111,97,.35)}
@@ -206,7 +207,6 @@ h1 span{color:var(--coral)}
 .opp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:14px}
 .opp{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--coral);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;transition:border-color .2s}
 .opp:hover{border-color:var(--line2);border-left-color:var(--coral)}
-.opp-icon{font-size:18px;color:var(--coral);line-height:1;margin-bottom:8px}
 .opp .big{font-family:var(--disp);font-weight:700;font-size:34px;line-height:1;letter-spacing:-.03em}
 .opp .big small{font-size:14px;color:var(--muted)}
 .opp h3{font-family:var(--disp);font-weight:600;font-size:14px;margin:8px 0 5px}
@@ -242,12 +242,18 @@ h1 span{color:var(--coral)}
 .seg-desc{font-size:11.5px;color:var(--muted);margin:8px 0 10px;line-height:1.5}
 .seg-list{display:flex;gap:4px;flex-wrap:wrap}
 .seg-list span{font-family:var(--mono);font-size:10px;background:var(--bg2);border:1px solid var(--line);padding:2px 6px;border-radius:4px;color:var(--muted)}
-.matrix table{width:100%;border-collapse:collapse;font-size:12.5px}
-.matrix th{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:center;padding:9px 8px;border-bottom:1px solid var(--line2)}
+.matrix table{width:100%;border-collapse:collapse;font-size:12.5px;table-layout:fixed}
+.matrix th{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:center;padding:9px 4px;border-bottom:1px solid var(--line2)}
 .matrix th:first-child{text-align:left}
-.matrix td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:center;color:var(--faint)}
+.matrix td{padding:10px 4px;border-bottom:1px solid var(--line);text-align:center;color:var(--faint)}
 .matrix td:first-child{text-align:left;color:var(--ink);font-weight:500}
+.matrix .dcol{width:52px}
 .matrix .yes{color:var(--coral-dp);font-size:15px}
+.matrix-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:2px 0 14px;font-size:11px;color:var(--muted)}
+.matrix-legend b{font-family:var(--mono);font-size:10px;color:var(--ink)}
+.matrix-legend .dot-key{margin-left:auto;color:var(--faint);white-space:nowrap}
+.matrix-legend .dot-key b{color:var(--faint)}
+.matrix-legend .dot-key b.on{color:var(--coral-dp)}
 .note{font-size:12px;color:var(--muted);font-family:var(--mono);line-height:1.7;margin-top:18px;border-left:2px solid var(--coral);padding-left:14px}
 
 /* live scan tab */
@@ -309,6 +315,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 40px;margin-top:24px}
 @media(max-width:900px){
   .bento{grid-template-columns:repeat(2,1fr)}
   .extract,.grid,.det-grid,.opp-grid,.oppctx,.hbar.two{grid-template-columns:1fr}
+  .scan{position:static;max-height:none}
   .card.span2{grid-column:span 1}
   .tabs{order:3;width:100%;margin:0}.nav-in{flex-wrap:wrap}.byline{display:none}
 }

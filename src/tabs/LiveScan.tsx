@@ -14,10 +14,8 @@ type Status =
 export function LiveScan({ d }: { d: AllData }) {
   const withImg = d.prescriptions.filter((p) => p.img);
   const [apiKey, setApiKey] = useState("");
-  const [pickRx, setPickRx] = useState(withImg[0]?.rx ?? "");
-  const [preview, setPreview] = useState<string | null>(
-    withImg[0] ? `${base}data/${withImg[0].img}` : null
-  );
+  const [pickRx, setPickRx] = useState("");
+  const [preview, setPreview] = useState<string | null>(null);
   const [upload, setUpload] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [result, setResult] = useState<ScanResult | null>(null);
@@ -43,12 +41,16 @@ export function LiveScan({ d }: { d: AllData }) {
 
   const run = async () => {
     if (!apiKey.trim()) {
-      setStatus({ kind: "err", msg: "Paste your password first." });
+      setStatus({ kind: "err", msg: "Paste a Gemini API key first." });
+      return;
+    }
+    if (!upload && !pickRx) {
+      setStatus({ kind: "err", msg: "Choose a corpus image or upload one first." });
       return;
     }
     setResult(null);
     setReading(true);
-    setStatus({ kind: "run", msg: "Extracting…" });
+    setStatus({ kind: "run", msg: "Extracting with gemini-2.5-flash…" });
     try {
       let b64: string, mime: string;
       if (upload) {
@@ -87,12 +89,12 @@ export function LiveScan({ d }: { d: AllData }) {
         <p className="sec-sub">
           This runs the <b>same extraction engine</b> live in your browser — pick one of the corpus
           scans or drop a brand-new prescription image, and watch the structured fields come back
-          from <code>our engine</code>. 
+          from our engine. Nothing here is saved; it's proof the pipeline is real, not pre-baked.
         </p>
 
         <div className="ls-controls">
           <div className="ls-key">
-            <label>Password</label>
+            <label>Gemini API key</label>
             <input
               type="password"
               value={apiKey}
@@ -103,6 +105,7 @@ export function LiveScan({ d }: { d: AllData }) {
           <div className="ls-pick">
             <label>Scan a corpus image</label>
             <select value={upload ? "" : pickRx} onChange={(e) => onPick(e.target.value)}>
+              <option value="" disabled>Select an image</option>
               {withImg.map((p) => (
                 <option key={p.rx} value={p.rx}>
                   {p.rx} · {p.patient} · {p.form}
@@ -114,10 +117,6 @@ export function LiveScan({ d }: { d: AllData }) {
             {status.kind === "run" ? "Scanning…" : "▶ Run live scan"}
           </button>
         </div>
-        <div className="ls-keynote">
-          Your password never leaves the browser tab and is never persisted.
-        </div>
-
         <div
           className="ls-drop"
           onClick={() => fileRef.current?.click()}
@@ -135,6 +134,11 @@ export function LiveScan({ d }: { d: AllData }) {
             hidden
             onChange={(e) => onUpload(e.target.files?.[0] ?? null)}
           />
+        </div>
+
+        <div className="ls-keynote">
+          Your key never leaves the browser tab and is never persisted. This is the demo build you
+          drive — don't ship it to a client with a key embedded.
         </div>
 
         <div className="extract" style={{ marginTop: 18 }}>
@@ -208,7 +212,7 @@ export function LiveScan({ d }: { d: AllData }) {
               </>
             ) : (
               <div className="empty" style={{ paddingTop: 40 }}>
-                Paste your password, choose an image, and hit <b>Run live scan</b> — the extracted fields
+                Paste your key, choose an image, and hit <b>Run live scan</b> — the extracted fields
                 will appear here.
               </div>
             )}

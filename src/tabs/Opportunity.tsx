@@ -6,38 +6,50 @@ import type { Rx } from "../types";
 interface Play {
   k: string;
   t: string;
+  abbr: string;
   f: (p: Rx) => boolean;
   desc: string;
   rule: string;
   formulaKey: string;
-  icon: string;
   est: string; // estimated revenue/opportunity label
 }
 
 const PLAYS: Play[] = [
   {
-    k: "refill", t: "Refill & Subscription", f: (p) => p.refill, icon: "↻",
+    k: "refill", t: "Refill & Subscription", abbr: "REF", f: (p) => p.refill,
     desc: "Standing-therapy scripts eligible for an auto-refill or subscription nudge — highest lifetime value per patient.",
     rule: "any medication runs ≥ 1 month or continuous", formulaKey: "refill",
     est: "Avg 3–6 repeat orders / patient / year",
   },
   {
-    k: "chronic", t: "Chronic Care", f: (p) => p.case === "Chronic", icon: "♥",
+    k: "chronic", t: "Chronic Care", abbr: "CHR", f: (p) => p.case === "Chronic",
     desc: "Long-term conditions suited to a managed chronic-care enrolment with adherence tracking and refill reminders.",
     rule: "case type resolves to Chronic", formulaKey: "case",
     est: "2–4× higher basket vs acute scripts",
   },
   {
-    k: "adherence", t: "Adherence / Pill-pack", f: (p) => p.poly, icon: "⬡",
+    k: "adherence", t: "Adherence / Pill-pack", abbr: "ADH", f: (p) => p.poly,
     desc: "High medication counts where an adherence pack reduces missed doses and boosts fulfillment rate.",
     rule: "script carries ≥ 5 medications", formulaKey: "poly",
     est: "15–25% uplift in fill-through rate",
   },
   {
-    k: "diagnostics", t: "Diagnostics Cross-sell", f: (p) => p.diagnostics, icon: "⊕",
+    k: "diagnostics", t: "Diagnostics Cross-sell", abbr: "DGN", f: (p) => p.diagnostics,
     desc: "Ordered tests or recorded labs that open a same-session diagnostics booking — closes the prescription-to-lab loop.",
     rule: "a test item OR a lab value is present", formulaKey: "diagnostics",
     est: "₹300–1,200 incremental per order",
+  },
+  {
+    k: "senior", t: "Senior Care", abbr: "SNR", f: (p) => p.age != null && p.age >= 60,
+    desc: "Older patients who convert well to doorstep refills, caregiver reminders and a senior-care membership.",
+    rule: "patient age ≥ 60", formulaKey: "senior",
+    est: "40–60% opt into doorstep refill",
+  },
+  {
+    k: "specialty", t: "Specialty Pharma", abbr: "SPL", f: (p) => /oncolog|nephrolog/i.test(p.area),
+    desc: "High-touch therapeutic areas (oncology, nephrology) needing cold-chain handling, prior-auth support and clinical follow-up.",
+    rule: "area is Oncology or Nephrology", formulaKey: "specialty",
+    est: "5–10× order value vs retail",
   },
 ];
 
@@ -83,7 +95,7 @@ export function Opportunity({ d }: { d: AllData }) {
           <h2>Commercial Plays</h2>
         </div>
         <p className="sec-sub">
-          Four revenue programs matched automatically against the structured extraction — no script is
+          Six revenue programs matched automatically against the structured extraction — no script is
           tagged by hand. Thresholds are policy settings Tata 1mg controls; change one and every count
           and the matrix below recompute instantly.
         </p>
@@ -94,7 +106,6 @@ export function Opportunity({ d }: { d: AllData }) {
             const hits = P.filter(pl.f);
             return (
               <div className="opp" key={pl.k}>
-                <div className="opp-icon">{pl.icon}</div>
                 <div className="big">
                   {hits.length}
                   <small>/{S.n_pres}</small>
@@ -130,7 +141,7 @@ export function Opportunity({ d }: { d: AllData }) {
             <div className="k">Total program flags</div>
             <div className="v">{fired}</div>
             <div className="cap">
-              Across four plays — a single script can qualify for several simultaneously.
+              Across six plays — a single script can qualify for several simultaneously.
             </div>
           </div>
           <div className="octx">
@@ -208,14 +219,20 @@ export function Opportunity({ d }: { d: AllData }) {
             <span className="n">▦</span>
             <h2 style={{ fontSize: 15 }}>Program coverage by specialty</h2>
           </div>
+          <div className="matrix-legend">
+            {PLAYS.map((pl) => (
+              <span key={pl.k}><b>{pl.abbr}</b> {pl.t}</span>
+            ))}
+            <span className="dot-key"><b className="on">●</b> covered <b>○</b> none</span>
+          </div>
           <table>
             <thead>
               <tr>
                 <th>Specialty</th>
                 {PLAYS.map((pl) => (
-                  <th key={pl.k}>{pl.t.split(" ")[0]}</th>
+                  <th key={pl.k} className="dcol" title={pl.t}>{pl.abbr}</th>
                 ))}
-                <th>Rx</th>
+                <th className="dcol">Rx</th>
               </tr>
             </thead>
             <tbody>
@@ -227,12 +244,12 @@ export function Opportunity({ d }: { d: AllData }) {
                     {PLAYS.map((pl) => {
                       const any = grp.some(pl.f);
                       return (
-                        <td key={pl.k} className={any ? "yes" : ""}>
+                        <td key={pl.k} className={`dcol${any ? " yes" : ""}`}>
                           {any ? "●" : "○"}
                         </td>
                       );
                     })}
-                    <td>{grp.length}</td>
+                    <td className="dcol">{grp.length}</td>
                   </tr>
                 );
               })}

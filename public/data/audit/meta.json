@@ -1,0 +1,7 @@
+{
+  "n_conversations": 6,
+  "channel": "Voice Call (transcribed)",
+  "source": "6 raw call transcripts",
+  "mode": "curated",
+  "note": "Aggregate KPIs are recomputed in the frontend from these rows."
+}

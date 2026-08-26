@@ -1,0 +1,62 @@
+{
+  "predicted_csat": {
+    "label": "Predicted CSAT",
+    "unit": "/5",
+    "formula": "engine-inferred, 1–5",
+    "detail": "Inferred from opening/closing sentiment, whether the issue was resolved, and the effort the customer had to exert. Not a surveyed score."
+  },
+  "handoff_rate": {
+    "label": "Handoff / escalation rate",
+    "unit": "%",
+    "formula": "escalated conversations ÷ total",
+    "detail": "Share of conversations the agent could not close at first contact and had to hand to a back-office/ops team."
+  },
+  "avg_csat": {
+    "label": "Average CSAT",
+    "unit": "/5",
+    "formula": "mean(predicted_csat)",
+    "detail": "Mean predicted CSAT across all audited conversations."
+  },
+  "accuracy_completeness": {
+    "label": "Accuracy & completeness",
+    "unit": "%",
+    "formula": "score 0–100",
+    "detail": "Correct information given and order/booking lookups actually used."
+  },
+  "empathy_tone": {
+    "label": "Empathy & tone",
+    "unit": "%",
+    "formula": "score 0–100",
+    "detail": "Acknowledgement of frustration and courteous, human language."
+  },
+  "resolution_ownership": {
+    "label": "Resolution ownership",
+    "unit": "%",
+    "formula": "score 0–100",
+    "detail": "Whether the agent drove to a concrete next step versus deflecting to another team. In this sample it is the cleanest separator of CSAT."
+  },
+  "proactivity": {
+    "label": "Proactivity",
+    "unit": "%",
+    "formula": "score 0–100",
+    "detail": "Anticipated follow-up needs, added notes, offered extra help."
+  },
+  "repeat_contact_signal": {
+    "label": "Repeat-contact signal",
+    "unit": "",
+    "formula": "boolean",
+    "detail": "True when the customer explicitly references a prior unresolved incident about the same issue."
+  },
+  "churn_risk": {
+    "label": "Churn risk",
+    "unit": "",
+    "formula": "High if Cancelled/Refunded OR (CSAT ≤ 2 AND ends Frustrated/Angry); Medium if escalated & pending; else Low",
+    "detail": "Derived from resolution outcome, closing sentiment and predicted CSAT — recomputed in the frontend from the conversation row."
+  },
+  "journey_gaps": {
+    "label": "Journey gaps",
+    "unit": "",
+    "formula": "engine-extracted list",
+    "detail": "Process, data or visibility gaps evident in the conversation — the operational-improvement backlog."
+  }
+}

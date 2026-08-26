@@ -40,17 +40,5 @@
   "formula": "a test item OR a recorded lab value is present",
   "detail": "Either an ordered diagnostic item or a numeric vital/lab reading on the script.",
   "unit": ""
- },
- "senior": {
-  "label": "Senior care candidate",
-  "formula": "patient age ≥ 60",
-  "detail": "Uses the extracted patient age. Scripts where age was not captured are excluded, not assumed.",
-  "unit": ""
- },
- "specialty": {
-  "label": "Specialty pharma",
-  "formula": "area is Oncology or Nephrology",
-  "detail": "Flags high-touch therapeutic areas that need cold-chain handling, prior-auth support and clinical follow-up, matched on the extracted specialty area.",
-  "unit": ""
  }
 }

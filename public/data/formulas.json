@@ -1,44 +1,62 @@
 {
  "completeness": {
   "label": "Completeness",
-  "formula": "fields present ÷ 7 core fields",
-  "detail": "Core fields: patient, age/sex, date, hospital, doctor, diagnosis, vitals. A field counts as present when it is non-empty and not ‘Not specified’.",
+  "formula": "fields found ÷ 7 key fields",
+  "detail": "The seven key fields are patient, age/sex, date, hospital, doctor, diagnosis and vitals. A field counts as found when it's filled in and not marked ‘Not specified’.",
   "unit": "%"
  },
  "confidence": {
-  "label": "Extraction confidence",
-  "formula": "base + 0.06 × completeness − 2.5 × UNCLEAR flags",
-  "detail": "base = 90 for digital/structured prescriptions, 83 for handwritten. Each field the model marked UNCLEAR removes 2.5 points. Clamped to 60–99.",
+  "label": "Reading confidence",
+  "formula": "how sure the engine is it read the script correctly",
+  "detail": "Starts higher for typed/printed scripts than for handwritten ones, goes up the more complete the script is, and drops for every field the engine couldn't read cleanly. Shown on a 60–99 scale.",
   "unit": "%"
  },
  "review": {
-  "label": "Review vs auto-clear",
-  "formula": "review if any UNCLEAR flag OR completeness < 100%",
-  "detail": "Everything else is straight-through (auto-cleared). No confidence threshold is used — a single illegible field routes the script to a human.",
+  "label": "Auto-clear vs review",
+  "formula": "send to a human if anything was unclear or a field is missing",
+  "detail": "If every field was read cleanly and nothing is missing, the script passes straight through. A single illegible or missing field sends it to a person to check — the engine never guesses.",
   "unit": ""
  },
  "case": {
   "label": "Case type",
-  "formula": "clinical chronicity, else longest item duration",
-  "detail": "Emergency/admission markers → Acute / Emergency. A chronic-condition marker in the diagnosis (cancer, chronic, diabetes, hypertension, schizophrenia, varicose, gout…) → Chronic. Otherwise by longest item duration: ≥90 days → Chronic, 15–89 → Sub-acute, <15 → Acute.",
+  "formula": "acute, sub-acute or chronic",
+  "detail": "Emergency or admission wording → acute/emergency. A long-term condition in the diagnosis (e.g. diabetes, hypertension, cancer) → chronic. Otherwise judged by how long the medicines run: 90+ days chronic, 15–89 sub-acute, under 15 acute.",
   "unit": ""
  },
  "refill": {
-  "label": "Refill & subscription candidate",
-  "formula": "any medication runs ≥ 1 month or continuous",
-  "detail": "Flags scripts eligible for a refill/subscription nudge based on standing therapy.",
+  "label": "Refill candidate",
+  "formula": "any medicine runs a month or longer",
+  "detail": "Flags scripts where the patient is on ongoing medication, so they're a good fit for a refill or subscription reminder.",
   "unit": ""
  },
  "poly": {
-  "label": "Polypharmacy (adherence pack)",
-  "formula": "script carries ≥ 5 medications",
-  "detail": "Counts distinct Medication-category items only (tests and supportive care excluded).",
+  "label": "Multiple medicines (5+)",
+  "formula": "script has 5 or more medicines",
+  "detail": "Counts only actual medicines (tests and supportive-care items don't count). These patients are candidates for an adherence pack.",
   "unit": ""
  },
  "diagnostics": {
-  "label": "Diagnostics cross-sell",
-  "formula": "a test item OR a recorded lab value is present",
-  "detail": "Either an ordered diagnostic item or a numeric vital/lab reading on the script.",
+  "label": "Lab-test opportunity",
+  "formula": "a test is ordered or a lab value is recorded",
+  "detail": "Flags scripts that either order a diagnostic test or note a lab/vital reading — a natural fit for a diagnostics offer.",
+  "unit": ""
+ },
+ "therapeutic_class": {
+  "label": "Types of therapy",
+  "formula": "medicines grouped by what they treat",
+  "detail": "Medicines are grouped into therapy types (for example antibiotics, painkillers, chronic-care) so you can see what the scripts are mostly for.",
+  "unit": ""
+ },
+ "category_split": {
+  "label": "What's on the scripts",
+  "formula": "every line grouped by kind",
+  "detail": "Each line on a prescription is one of three kinds — a medicine, a diagnostic test, or supportive care. This is the mix across all lines in the set.",
+  "unit": ""
+ },
+ "specialty": {
+  "label": "Medical specialties",
+  "formula": "scripts grouped by clinical area",
+  "detail": "Each script is tagged with the medical area it came from (for example cardiology, dermatology) to show which specialties are represented.",
   "unit": ""
  }
 }

@@ -74,11 +74,19 @@ export function Overview({ d }: { d: AllData }) {
             </p>
           </Card>
 
-          <Card title="Resolution mix" q="How the contacts closed">
+          <Card
+            title="How contacts closed"
+            q="Solved, handed off, cancelled or unresolved"
+            info={<Info def={d.formulas.resolution_mix} />}
+          >
             <Donut data={res} centerTop={S.n} centerSub="CONTACTS" />
           </Card>
 
-          <Card title="Sentiment trend" q="Direction from opening to closing message">
+          <Card
+            title="Mood: start → end"
+            q="Did customers feel better or worse by the end?"
+            info={<Info def={d.formulas.sentiment_trend} />}
+          >
             <Donut
               data={trend}
               centerTop={`${Math.round((S.by_trend.Improved ?? 0) / S.n * 100)}%`}
@@ -87,8 +95,9 @@ export function Overview({ d }: { d: AllData }) {
           </Card>
 
           <Card
-            title="Root-cause groups"
-            q="Where contacts concentrate"
+            title="Top contact reasons"
+            q="Why customers got in touch"
+            info={<Info def={d.formulas.root_cause_groups} />}
           >
             <HBar rows={groups} />
           </Card>

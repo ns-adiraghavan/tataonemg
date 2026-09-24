@@ -22,17 +22,21 @@ export function AgentQuality({ d }: { d: AllData }) {
           <h2>Agent Quality</h2>
         </div>
         <p className="sec-sub">
-          Four scored dimensions per interaction. Across this sample, resolution ownership is the
-          cleanest separator of CSAT — the lever worth coaching to.
+          Four things we score on every conversation. Across this sample, taking ownership is the
+          clearest thing that separates happy customers from unhappy ones — the lever worth coaching to.
         </p>
 
         <div className="grid">
-          <Card title="Average agent scorecard" q="Mean score across all audited conversations">
+          <Card
+            title="Team scorecard"
+            q="Average score across all reviewed conversations"
+            info={<Info def={d.formulas.agent_scorecard} />}
+          >
             <HBar rows={scoreRows} max={100} />
           </Card>
 
           <Card
-            title="Resolution ownership vs CSAT"
+            title="Ownership vs satisfaction"
             q="The clean separator: ownership ≥90 → CSAT 5, ≤75 → CSAT ≤2"
             info={<Info def={d.formulas.resolution_ownership} />}
           >

@@ -45,8 +45,8 @@ export function Handoff({ d }: { d: AllData }) {
 
         <div className="grid">
           <Card
-            title="Escalation rate by root-cause group"
-            q="Where handoffs originate"
+            title="Handoff rate by reason"
+            q="Which contact reasons trigger a handoff"
             info={<Info def={d.formulas.handoff_rate} />}
             span2
           >
@@ -58,9 +58,9 @@ export function Handoff({ d }: { d: AllData }) {
           <table className="atab">
             <thead>
               <tr>
-                <th>Root-cause group</th>
+                <th>Contact reason</th>
                 <th className="num">Conversations</th>
-                <th className="num">Escalation rate</th>
+                <th className="num">Handoff rate</th>
                 <th className="num">Avg CSAT</th>
                 <th>Priority</th>
               </tr>
@@ -85,7 +85,7 @@ export function Handoff({ d }: { d: AllData }) {
 
         <div className="sec-h" style={{ marginTop: 26 }}>
           <span className="n">·</span>
-          <h2 style={{ fontSize: 15 }}>Escalated conversations</h2>
+          <h2 style={{ fontSize: 15 }}>Handed-off conversations</h2>
         </div>
         <div className="esc-grid">
           {escConvs.map((c) => (

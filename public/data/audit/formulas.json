@@ -3,60 +3,84 @@
     "label": "Predicted CSAT",
     "unit": "/5",
     "formula": "engine-inferred, 1–5",
-    "detail": "Inferred from opening/closing sentiment, whether the issue was resolved, and the effort the customer had to exert. Not a surveyed score."
-  },
-  "handoff_rate": {
-    "label": "Handoff / escalation rate",
-    "unit": "%",
-    "formula": "escalated conversations ÷ total",
-    "detail": "Share of conversations the agent could not close at first contact and had to hand to a back-office/ops team."
+    "detail": "A satisfaction score the system works out from the conversation itself — how the customer sounded at the start and end, whether the issue got solved, and how much effort it took them. It is not a survey score."
   },
   "avg_csat": {
     "label": "Average CSAT",
     "unit": "/5",
-    "formula": "mean(predicted_csat)",
-    "detail": "Mean predicted CSAT across all audited conversations."
+    "formula": "average of all predicted CSAT scores",
+    "detail": "The mean predicted satisfaction score across every conversation that was reviewed."
+  },
+  "handoff_rate": {
+    "label": "Handoff rate",
+    "unit": "%",
+    "formula": "handed-off conversations ÷ all conversations",
+    "detail": "The share of conversations the agent couldn't close on their own and had to pass to another team. This is the number Tata 1mg flagged as too high."
+  },
+  "resolution_mix": {
+    "label": "How contacts closed",
+    "unit": "",
+    "formula": "share of conversations by outcome",
+    "detail": "Every conversation ends one of four ways — solved, handed off and still pending, cancelled or refunded, or left unresolved. This is the split across all of them."
+  },
+  "sentiment_trend": {
+    "label": "Mood: start → end",
+    "unit": "",
+    "formula": "closing mood compared with opening mood",
+    "detail": "Whether the customer felt better, the same, or worse by the end of the conversation than they did at the start."
+  },
+  "root_cause_groups": {
+    "label": "Top contact reasons",
+    "unit": "",
+    "formula": "conversations grouped by why the customer got in touch",
+    "detail": "Each conversation is tagged with the real reason behind it, then grouped so you can see which reasons come up most."
+  },
+  "agent_scorecard": {
+    "label": "Agent scorecard",
+    "unit": "/100",
+    "formula": "four scores per conversation, 0–100",
+    "detail": "Every conversation is scored on four things: answer accuracy, empathy & tone, taking ownership, and proactive help. Shown here as the average across all conversations."
   },
   "accuracy_completeness": {
-    "label": "Accuracy & completeness",
-    "unit": "%",
+    "label": "Answer accuracy",
+    "unit": "/100",
     "formula": "score 0–100",
-    "detail": "Correct information given and order/booking lookups actually used."
+    "detail": "Did the agent give correct, complete information and actually check the order or booking rather than guess."
   },
   "empathy_tone": {
     "label": "Empathy & tone",
-    "unit": "%",
+    "unit": "/100",
     "formula": "score 0–100",
-    "detail": "Acknowledgement of frustration and courteous, human language."
+    "detail": "Did the agent acknowledge the customer's frustration and use warm, human language."
   },
   "resolution_ownership": {
-    "label": "Resolution ownership",
-    "unit": "%",
+    "label": "Took ownership",
+    "unit": "/100",
     "formula": "score 0–100",
-    "detail": "Whether the agent drove to a concrete next step versus deflecting to another team. In this sample it is the cleanest separator of CSAT."
+    "detail": "Did the agent drive the issue to a real next step instead of passing it to another team. In this sample it's the clearest thing that separates happy customers from unhappy ones."
   },
   "proactivity": {
-    "label": "Proactivity",
-    "unit": "%",
+    "label": "Proactive help",
+    "unit": "/100",
     "formula": "score 0–100",
-    "detail": "Anticipated follow-up needs, added notes, offered extra help."
+    "detail": "Did the agent look ahead — flag a likely follow-up, add a note, or offer extra help before being asked."
   },
   "repeat_contact_signal": {
-    "label": "Repeat-contact signal",
+    "label": "Repeat contact",
     "unit": "",
-    "formula": "boolean",
-    "detail": "True when the customer explicitly references a prior unresolved incident about the same issue."
+    "formula": "yes / no",
+    "detail": "Flagged when the customer says they've reached out before about the same unresolved problem."
   },
   "churn_risk": {
     "label": "Churn risk",
     "unit": "",
-    "formula": "High if Cancelled/Refunded OR (CSAT ≤ 2 AND ends Frustrated/Angry); Medium if escalated & pending; else Low",
-    "detail": "Derived from resolution outcome, closing sentiment and predicted CSAT — recomputed in the frontend from the conversation row."
+    "formula": "High, Medium or Low",
+    "detail": "How likely this customer is to leave. High if the order was cancelled or refunded, or they ended angry with a low score; Medium if it was handed off and still open; Low otherwise."
   },
   "journey_gaps": {
-    "label": "Journey gaps",
+    "label": "Process gaps",
     "unit": "",
-    "formula": "engine-extracted list",
-    "detail": "Process, data or visibility gaps evident in the conversation — the operational-improvement backlog."
+    "formula": "list pulled from the conversation",
+    "detail": "The process, data or visibility problems the conversation exposes — in effect, a to-do list of things to fix so the contact wouldn't happen again."
   }
 }

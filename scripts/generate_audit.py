@@ -17,7 +17,7 @@ new transcript instead of being hand-wired to these six.
 
 Two modes:
     python generate_audit.py                     # offline: writes the curated reference audit
-    python generate_audit.py --live --key <KEY>  # re-audits each transcript via Gemini (same prompt)
+    python generate_audit.py --live --key <KEY>  # re-audits each transcript via the live engine (same prompt)
 
 Aggregate KPIs are NOT written to disk. They are recomputed in TypeScript from
 the conversation rows at load time (see src/apps/audit/summary.ts), so adding a
@@ -287,9 +287,9 @@ def extract_order_id(messages):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# --live path (optional): re-audit a transcript through Gemini with AUDIT_PROMPT
+# --live path (optional): re-audit a transcript through the live engine with AUDIT_PROMPT
 # ──────────────────────────────────────────────────────────────────────────────
-def audit_via_gemini(transcript_text, api_key, model="gemini-2.5-flash"):
+def audit_via_engine(transcript_text, api_key, model="gemini-2.5-flash"):
     import urllib.request
     url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
            f"{model}:generateContent?key={api_key}")
@@ -347,8 +347,8 @@ FORMULAS = {
 
 def build():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--live", action="store_true", help="re-audit transcripts via Gemini")
-    ap.add_argument("--key", default=os.environ.get("GEMINI_API_KEY", ""))
+    ap.add_argument("--live", action="store_true", help="re-audit transcripts via the live engine")
+    ap.add_argument("--key", default=os.environ.get("ENGINE_KEY", ""))
     args = ap.parse_args()
 
     # locate files
@@ -369,9 +369,9 @@ def build():
 
         if args.live:
             if not args.key:
-                sys.exit("--live needs --key or GEMINI_API_KEY")
+                sys.exit("--live needs --key or ENGINE_KEY")
             plain = "\n".join(f'{m["speaker"]}: {m["text"]}' for m in messages)
-            audit = audit_via_gemini(plain, args.key)
+            audit = audit_via_engine(plain, args.key)
         else:
             audit = dict(CURATED[cid])
             audit["root_cause_group"] = GROUP.get(audit["root_cause_category"], "Other")

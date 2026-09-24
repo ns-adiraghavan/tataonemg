@@ -81,7 +81,7 @@ export async function auditTranscript(
   transcript: string,
   apiKey: string
 ): Promise<Audit> {
-  const url = `${config.gemini.endpoint}/${config.gemini.model}:generateContent?key=${apiKey}`;
+  const url = `${config.engine.endpoint}/${config.engine.model}:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -97,8 +97,10 @@ export async function auditTranscript(
 
   if (!res.ok) {
     const t = await res.text().catch(() => "");
-    if (res.status === 400 && /API_KEY/i.test(t)) throw new Error("Invalid password");
-    throw new Error(`Engine call failed (${res.status}). ${t.slice(0, 160)}`);
+    if (res.status === 400 && /API_KEY/i.test(t)) throw new Error("Invalid engine password");
+    // Keep the surfaced message engine-neutral — don't leak the upstream body.
+    void t;
+    throw new Error(`Audit engine call failed (status ${res.status}).`);
   }
 
   const data = await res.json();

@@ -27,10 +27,10 @@ export const SCORE_KEYS = [
 ] as const;
 
 export const SCORE_LABEL: Record<string, string> = {
-  accuracy_completeness: "Accuracy & completeness",
+  accuracy_completeness: "Answer accuracy",
   empathy_tone: "Empathy & tone",
-  resolution_ownership: "Resolution ownership",
-  proactivity: "Proactivity",
+  resolution_ownership: "Took ownership",
+  proactivity: "Proactive help",
 };
 
 export interface Summary {

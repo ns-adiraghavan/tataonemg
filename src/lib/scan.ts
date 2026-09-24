@@ -118,7 +118,7 @@ export async function scanImage(
   mime: string,
   apiKey: string
 ): Promise<ScanResult> {
-  const url = `${config.gemini.endpoint}/${config.gemini.model}:generateContent?key=${apiKey}`;
+  const url = `${config.engine.endpoint}/${config.engine.model}:generateContent?key=${apiKey}`;
   const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -142,8 +142,10 @@ export async function scanImage(
   if (!res.ok) {
     const t = await res.text().catch(() => "");
     if (res.status === 400 && /API_KEY/i.test(t))
-      throw new Error("Invalid API key");
-    throw new Error(`Gemini call failed (${res.status}). ${t.slice(0, 160)}`);
+      throw new Error("Invalid engine password");
+    // Keep the surfaced message engine-neutral — don't leak the upstream body.
+    void t;
+    throw new Error(`Extraction engine call failed (status ${res.status}).`);
   }
 
   const data = await res.json();

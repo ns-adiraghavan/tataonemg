@@ -26,9 +26,9 @@ npm run preview    # serve the built dist
 4. **Business Opportunity** — the four commercial plays (refill, chronic, adherence,
    diagnostics), addressable-scripts context, program-targeted CSV export, and the
    specialty-coverage matrix.
-5. **Live Scan** — runs the **same extraction engine live in the browser**. Paste a Gemini API
-   key, pick one of the corpus scans or drop a new image, and watch `gemini-2.5-flash` return
-   the structured fields. Nothing is saved — it's proof the pipeline is real.
+5. **Live Scan** — runs the **same extraction engine live in the browser**. Enter the engine
+   password, pick one of the corpus scans or drop a new image, and watch the extraction engine
+   return the structured fields. Nothing is saved — it's proof the pipeline is real.
 
 ## Info buttons (formulas)
 
@@ -36,15 +36,18 @@ Every derived metric (confidence, completeness, auto-clear/review, case type, re
 diagnostics) carries an **ⓘ** that opens the exact formula, sourced from `public/data/formulas.json`.
 Change a threshold there and both the popover and the number update together.
 
-## Live Scan — key handling
+## Live Scan — engine password handling
 
-- The Gemini key is held **in memory only** (React state). It is never written to disk,
+- The engine password is held **in memory only** (React state). It is never written to disk,
   localStorage, or the bundle.
-- The call goes browser → `generativelanguage.googleapis.com` directly. On first run with a real
-  key, confirm the endpoint accepts the browser call (it is CORS-open, but worth the 10-sec check).
-- **This is the demo build you drive.** Do not hand a client a copy with a key embedded. If a
+- The call goes browser → the extraction endpoint directly. On first run with a real
+  password, confirm the endpoint accepts the browser call (it is CORS-open, but worth the 10-sec check).
+- The raw upstream model id / endpoint live only in `src/config.ts` (`engine.model` / `engine.endpoint`)
+  and are never surfaced in the UI. To hide them from the network tab entirely, front the call with a
+  thin server-side proxy (see below).
+- **This is the demo build you drive.** Do not hand a client a copy with a credential embedded. If a
   client ever needs to self-serve the scan, that's the server-side (EC2 FastAPI) variant — a
-  separate build.
+  separate build, which also doubles as the proxy that keeps the model vendor invisible.
 - For corpus images, a failed live call falls back to a message rather than a blank screen, so a
   flaky network never kills the room. A brand-new uploaded image has no fallback (the "watch it
   work cold" moment).

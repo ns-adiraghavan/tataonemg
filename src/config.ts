@@ -4,8 +4,10 @@ export const config = {
     subtitle: "Tata 1mg · extraction & clinical analytics",
     org: "Netscribes for Tata 1mg",
   },
-  // Live-scan engine (browser-resident; key pasted at runtime, never stored)
-  gemini: {
+  // Live-scan engine (browser-resident; password pasted at runtime, never stored).
+  // model/endpoint are the raw upstream identifiers required to make the call —
+  // never surface these in the UI.
+  engine: {
     model: "gemini-2.5-flash",
     endpoint: "https://generativelanguage.googleapis.com/v1beta/models",
   },

@@ -1,6 +1,6 @@
 import type { AllData } from "../data/store";
 import { computeSummary } from "../lib/summary";
-import { Info } from "../components/ui";
+import { Info } from "../../../components/ui";
 import type { Rx } from "../types";
 
 interface Play {

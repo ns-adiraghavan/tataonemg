@@ -1,6 +1,6 @@
 import type { AllData } from "../data/store";
 import { computeSummary } from "../lib/summary";
-import { Card, HBar, Donut, Info, CASE_COLORS, CAT_COLORS, RAMP } from "../components/ui";
+import { Card, HBar, Donut, Info, CASE_COLORS, CAT_COLORS, RAMP } from "../../../components/ui";
 
 export function Clinical({ d }: { d: AllData }) {
   const P = d.prescriptions;

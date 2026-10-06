@@ -1,6 +1,6 @@
 import { useState, useMemo, Fragment } from "react";
 import type { AllData } from "../data/store";
-import { CASE_COLORS } from "../components/ui";
+import { CASE_COLORS } from "../../../components/ui";
 import { ageSex, csvCell, medLine, download } from "../lib/csv";
 import type { Rx } from "../types";
 
@@ -116,7 +116,7 @@ export function Explorer({ d }: { d: AllData }) {
   const exportItems = () => {
     const cols = [
       "Rx ID", "Patient Name", "Category", "Item / Medication / Test",
-      "Dose / Form", "Frequency / Timing", "Duration / Instructions", "Therapeutic Class",
+      "Dose / Form", "Frequency / Notes", "Duration / Instructions", "Therapeutic Class",
     ];
     const lines = [cols.map(csvCell).join(",")];
     progRows.forEach((p) =>

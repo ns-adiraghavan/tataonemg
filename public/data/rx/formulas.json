@@ -1,0 +1,38 @@
+{
+ "found": {
+  "label": "Key fields found",
+  "formula": "fields written on the script ÷ 7",
+  "detail": "The seven key fields are patient, age, date, hospital, doctor, diagnosis and vitals. A field counts when it is actually written on the script; nothing is filled in from elsewhere.",
+  "unit": ""
+ },
+ "review": {
+  "label": "Entries to check",
+  "formula": "any entry tagged CHECK",
+  "detail": "An entry is tagged CHECK when the handwriting can't be read with confidence. These are the entries worth a second look against the scan.",
+  "unit": ""
+ },
+ "case": {
+  "label": "Case type",
+  "formula": "acute, sub-acute or chronic",
+  "detail": "Stat/IV emergency orders → Acute / Emergency. A long-term condition written in the diagnosis (cancer, schizophrenia, diabetes, hypertension, radiculopathy, gout…) → Chronic. Otherwise by the longest medicine duration: 90+ days Chronic, 15–89 days Sub-acute, under 15 days Acute.",
+  "unit": ""
+ },
+ "refill": {
+  "label": "Refill candidate",
+  "formula": "any medicine runs a month or longer",
+  "detail": "At least one medicine is prescribed for 4 weeks or more, or continuously.",
+  "unit": ""
+ },
+ "poly": {
+  "label": "Multiple medicines (5+)",
+  "formula": "script has 5 or more medicines",
+  "detail": "Counts medicines only — tests and supportive-care items don't count.",
+  "unit": ""
+ },
+ "diagnostics": {
+  "label": "Lab-test opportunity",
+  "formula": "a test is ordered, or a lab result is written on the script",
+  "detail": "Tests ordered on the script, or lab results (e.g. uric acid, creatinine). Routine vitals such as BP, pulse, SpO₂ or weight don't count.",
+  "unit": ""
+ }
+}

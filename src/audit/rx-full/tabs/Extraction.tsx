@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { AllData } from "../data/store";
-import { CAT_COLORS, Info } from "../components/ui";
+import { CAT_COLORS, Info } from "../../../components/ui";
 import { ageSex } from "../lib/csv";
 
 const base = import.meta.env.BASE_URL;
@@ -107,7 +107,7 @@ export function Extraction({ d }: { d: AllData }) {
                 <tr>
                   <th>Item</th>
                   <th>Dose</th>
-                  <th>Frequency</th>
+                  <th>Frequency / notes</th>
                   <th>Duration</th>
                 </tr>
               </thead>

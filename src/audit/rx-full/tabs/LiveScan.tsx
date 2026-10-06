@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import type { AllData } from "../data/store";
 import { scanImage, fileToB64, urlToB64, type ScanResult } from "../lib/scan";
-import { CAT_COLORS } from "../components/ui";
+import { CAT_COLORS } from "../../../components/ui";
 
 const base = import.meta.env.BASE_URL;
 
@@ -186,7 +186,7 @@ export function LiveScan({ d }: { d: AllData }) {
                     <tr>
                       <th>Item</th>
                       <th>Dose</th>
-                      <th>Frequency</th>
+                      <th>Frequency / notes</th>
                       <th>Duration</th>
                     </tr>
                   </thead>

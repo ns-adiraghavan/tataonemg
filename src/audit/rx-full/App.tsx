@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import "./theme.css";
+import "../../theme.css";
 import { config } from "./config";
 import { login, isSignedIn, logout } from "./auth";
 import { loadAll, type AllData } from "./data/store";
 import { computeSummary } from "./lib/summary";
-import { Info } from "./components/ui";
+import { Info } from "../../components/ui";
 import type { TabKey } from "./types";
 import { Extraction } from "./tabs/Extraction";
 import { Clinical } from "./tabs/Clinical";

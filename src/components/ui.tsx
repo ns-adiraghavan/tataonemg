@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import type { ReactNode } from "react";
-import type { FormulaDef } from "../types";
+import type { FormulaDef } from "../prescription/types";
 
 /* ── Info button + formula popover (feeds off formulas.json) ── */
 export function Info({ def }: { def?: FormulaDef }) {

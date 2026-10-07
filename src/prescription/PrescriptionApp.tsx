@@ -3,7 +3,6 @@ import "../theme.css";
 import "./rx.css";
 import type { Data, TabKey } from "./types";
 import { loadData } from "./lib/data";
-import { summarize } from "./lib/summary";
 import { Extraction } from "./tabs/Extraction";
 import { Opportunity } from "./tabs/Opportunity";
 import { Clinical } from "./tabs/Clinical";
@@ -77,7 +76,6 @@ export default function PrescriptionApp() {
   const [d, setD] = useState<Data | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [tab, setTab] = useState<TabKey>("extract");
-  const [collapsed, setCollapsed] = useState(true);
 
   useEffect(() => {
     document.title = "Prescription Intelligence — Tata 1mg × Netscribes";
@@ -92,8 +90,6 @@ export default function PrescriptionApp() {
   if (!ok) return <Login onDone={() => setOk(true)} />;
   if (err) return <div className="rx-msg err">Could not load the data: {err}</div>;
   if (!d) return <div className="rx-msg">Loading…</div>;
-
-  const S = summarize(d.P);
 
   return (
     <>
@@ -122,51 +118,6 @@ export default function PrescriptionApp() {
       </nav>
 
       <div className="rx-wrap">
-        <div className={`topblock${collapsed ? " collapsed" : ""}`}>
-          <div className="hero">
-            <div className="hero-top">
-              <h1>
-                From a photo of a prescription to <span>structured intelligence</span>.
-              </h1>
-              <button className="collapse-btn" onClick={() => setCollapsed((c) => !c)}>
-                <span className="cb-txt">{collapsed ? "Show overview" : "Hide overview"}</span>
-                <svg width="12" height="12" viewBox="0 0 12 12">
-                  <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.6" fill="none" />
-                </svg>
-              </button>
-            </div>
-            <p className="subtitle">
-              <b>{S.n_pres} prescriptions</b>, {S.n_items} line items — every field, medicine and dose read
-              from the scan, with anything hard to read tagged for a second look.
-            </p>
-            <div className="bento">
-              <div className="kpi">
-                <div className="lab">Prescriptions</div>
-                <div className="val">{S.n_pres}</div>
-                <div className="foot">{S.n_items} line items read</div>
-              </div>
-              <div className="kpi">
-                <div className="lab">Medicines</div>
-                <div className="val">{S.n_meds}</div>
-                <div className="foot">{S.n_tests} tests · {S.n_other} other instructions</div>
-              </div>
-              <div className="kpi">
-                <div className="lab">Key fields found</div>
-                <div className="val">
-                  {S.avg_found}
-                  <small>%</small>
-                </div>
-                <div className="foot">average, of 7 key fields per script</div>
-              </div>
-              <div className="kpi">
-                <div className="lab">Entries to check</div>
-                <div className="val">{S.n_check}</div>
-                <div className="foot">across {S.n_review} prescriptions</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {tab === "extract" && <Extraction d={d} />}
         {tab === "opportunity" && <Opportunity d={d} />}
         {tab === "analytics" && <Clinical d={d} />}
@@ -174,7 +125,7 @@ export default function PrescriptionApp() {
 
         <footer>
           <div className="foot-in">
-            <div>Netscribes for Tata 1mg · {S.n_pres} prescriptions · {S.n_items} items</div>
+            <div>Netscribes for Tata 1mg · {d.P.length} prescriptions · {d.P.reduce((n, p) => n + p.n_items, 0)} items</div>
             <div className="r">
               <img src={`${base}netscribes-color.png`} alt="Netscribes" />
             </div>

@@ -30,6 +30,24 @@ export function Clinical({ d }: { d: Data }) {
           Every count rolls up from the extracted data.
         </p>
 
+        <div className="bento" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: 14 }}>
+          <div className="kpi">
+            <div className="lab">Prescriptions</div>
+            <div className="val">{S.n_pres}</div>
+            <div className="foot">{S.n_items} line items read</div>
+          </div>
+          <div className="kpi">
+            <div className="lab">Medicines</div>
+            <div className="val">{S.n_meds}</div>
+            <div className="foot">{S.n_tests} tests · {S.n_other} other instructions</div>
+          </div>
+          <div className="kpi">
+            <div className="lab">Key fields found</div>
+            <div className="val">{S.avg_found}<small>%</small></div>
+            <div className="foot">average, of 7 key fields per script</div>
+          </div>
+        </div>
+
         <div className="grid">
           <Card title="Therapeutic class mix" q="What kinds of medicine are prescribed? (mapped from the medicine name)" span2>
             <HBar rows={classRows} two />

@@ -1,7 +1,7 @@
 import type { Rx, RxItem } from "../types";
 
 export const ageSex = (p: Rx) => {
-  const parts = [p.age ? `${p.age} yr` : null, p.sex || null].filter(Boolean);
+  const parts = [p.age ? `${p.age} yr` : null, p.sex ? p.sex[0] : null].filter(Boolean);
   return parts.length ? parts.join(" / ") : null;
 };
 

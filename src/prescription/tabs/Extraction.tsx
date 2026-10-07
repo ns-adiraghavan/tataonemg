@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { Data, Rx } from "../types";
 import { ImageViewer } from "../ImageViewer";
 import { Info } from "../../components/ui";
-import { ageSex, CAT_COLORS } from "../lib/summary";
+import { CAT_COLORS } from "../lib/summary";
 
 const base = import.meta.env.BASE_URL;
 
@@ -90,8 +90,9 @@ export function Extraction({ d }: { d: Data }) {
 
           <div className="fields">
             <Field k="Patient" v={p.patient} third />
-            <Field k="Age / Sex" v={ageSex(p)} third />
-            <Field k="Date" v={p.date} third />
+            <Field k="Age" v={p.age ? `${p.age} yr` : null} third />
+            <Field k="Sex" v={p.sex ? `${p.sex} · ${p.sex_basis}` : null} third />
+            <Field k="Date" v={p.date} full />
             <Field k="Hospital / Clinic" v={p.hospital} full />
             <Field k="Doctor" v={p.doctor} full />
             <Field k="Contact" v={p.contact} full />
@@ -143,11 +144,6 @@ export function Extraction({ d }: { d: Data }) {
               </tbody>
             </table>
           </div>
-
-          <p className="rx-note">
-            Only what is written on the script is shown. Where handwriting can't be read reliably the
-            entry is tagged <span className="frag rv">CHECK</span> or left blank — it is never guessed.
-          </p>
         </section>
       </div>
     </div>

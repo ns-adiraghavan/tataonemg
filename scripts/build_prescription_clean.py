@@ -65,14 +65,14 @@ RECORDS = [
             it(MED, "Syp CALPOL (250/5)", "4 mL", "Q6H", "3 days", "Analgesic / NSAID"),
             it(MED, "Syp DELCON", "3 mL", "TDS", "5 days", "Respiratory"),
             it(MED, "Syp LEVOLIN", "3 mL", "TDS", "5 days", "Respiratory"),
-            it(MED, "Syp MEFTAL-P (100/5)", "3 mL", "SOS — for high fever (കൂടിയ പനിക്ക്)", "As needed", "Analgesic / NSAID"),
+            it(MED, "Syp MEFTAL-P (100/5)", "3 mL", "SOS — for high fever", "As needed", "Analgesic / NSAID"),
         ],
     ),
     # ───────────────────────────────────────────────────────── RX_003
     dict(
         rx="RX_003", img="rx_003.jpg", lang="English", form="Handwritten on printed letterhead",
         area="General Medicine / Gastro",
-        patient="Mr. Subadh Bhatt", age=62, sex="M", date="16-08-2022",
+        patient="Mr. Subadh Bhatt", age=62, date="16-08-2022",
         hospital="Dr. Shukla's letterhead (Institute of Medical Sciences, BHU) · pharmacy stamp: Shri Maya Medical Store, Bhopal",
         doctor="Dr. S.S. Shukla — MBBS, MD (Paediatrics) · Regd. No. 18-28707 (MCI)",
         contact="Mob 9437004474 · WhatsApp 7978676049 · doctorshukla.in · Store: 8103905621, 7773014076",
@@ -91,7 +91,7 @@ RECORDS = [
     dict(
         rx="RX_004", img="rx_004.jpg", lang="English", form="Handwritten on printed letterhead",
         area="Orthopaedics", lab_values=True,
-        patient="Mr. Jitender Kr.", age=44, sex="M", date="3-10-14",
+        patient="Mr. Jitender Kr.", age=44, date="3-10-14",
         hospital="Sir Ganga Ram Hospital, Dept. of Orthopedics, Rajinder Nagar, New Delhi-110060",
         doctor="Dr S.P. Mandal — B.Sc, MBBS (Cal.), MS (Ortho) AIIMS, M.Ch (Orth.) Liverpool UK · Reg. No. 30516 (WB), 11808 (Delhi)",
         contact="Tel 25750000 ext. 1069, 42251000 · OPD 4225 4000 (Mon/Wed/Thu/Sat, 12–2 pm) · Appointments 9818601686 (9 am–5 pm)",
@@ -111,7 +111,7 @@ RECORDS = [
     dict(
         rx="RX_005", img="rx_005.jpg", lang="English", form="Handwritten on printed letterhead",
         area="Oncology",
-        patient="Mr. Daniram Pal", age=None, sex="M",
+        patient="Mr. Daniram Pal", age=None,
         date="__/07/25 (day cut off in photo)",
         hospital="VY Sairisa Cancer Care Center (VY Hospital), Adjacent to Kamal Vihar (Sector 12), New Dhamtari Road, Raipur (C.G.)",
         doctor="Dr. Saurabh Jain — Surgical Oncology (stamp, partly obscured)",
@@ -148,7 +148,7 @@ RECORDS = [
     dict(
         rx="RX_008", img="rx_008.jpg", lang="English", form="Handwritten on printed letterhead",
         area="Nephrology",
-        patient="Mr. Kiran Sinha", age=22, sex="M", date="24-07-2025",
+        patient="Mr. Kiran Sinha", age=22, date="24-07-2025",
         hospital="VY Hospital",
         doctor="Dr. Rajesh Agrawal — MD (Internal Medicine), Consultant · Reg. No. CGMC 1125/2007",
         contact=None,
@@ -167,7 +167,7 @@ RECORDS = [
     dict(
         rx="RX_009", img="rx_009.jpg", lang="English", form="Handwritten on printed letterhead",
         area="Psychiatry",
-        patient="Mr. Srinivas", age=41, sex="M", date="15-03-2024",
+        patient="Mr. Srinivas", age=41, date="15-03-2024",
         hospital="Dr. Nagendar Rao's clinic — Plot 89, Sardar Patel Colony, Trimulgherry, Secunderabad-500015",
         doctor="Dr. Y. Nagendar Rao — MBBS, MD (Psychiatry), Consultant Neuro-Psychiatrist · Regd. No. 8373 (A.P.)",
         contact="Tel (Resi.): 040-27796644 · Emergency referral: Asha Hospital, Banjara Hills, Hyderabad (66752222, 23542838)",
@@ -202,6 +202,17 @@ CHRONIC_DX = ["cancer", "carcinoma", "chemo", "pt3", "oncolog", "schizophren", "
 
 
 def derive(r):
+    # Sex: as written on the script, else inferred from the title in the name (Mr. / Mrs. / Ms. / Miss)
+    raw = r.get("sex")
+    title = re.match(r"\s*(mr|mrs|ms|miss|master|smt|shri)\b", (r.get("patient") or "").lower())
+    if raw:
+        r["sex"], r["sex_basis"] = {"M": "Male", "F": "Female"}[raw], "written on script"
+    elif title:
+        t = title.group(1)
+        r["sex"] = "Female" if t in ("mrs", "ms", "miss", "smt") else "Male"
+        r["sex_basis"] = f"inferred from title \u2018{t.capitalize()}.\u2019"
+    else:
+        r["sex"], r["sex_basis"] = None, None
     items, meds = r["items"], [i for i in r["items"] if i["cat"] == MED]
     r["n_items"], r["n_meds"] = len(items), len(meds)
     r["n_tests"] = sum(1 for i in items if i["cat"] == TEST)
@@ -271,10 +282,15 @@ def main():
     for old in (OUT / "images").glob("*"):
         old.unlink()
     out = []
-    for r in RECORDS:
+    # Display order: 1–8 consecutively. The source's first record (Asha Rani, AIIMS) goes last.
+    ordered = RECORDS[1:] + RECORDS[:1]
+    for n, r in enumerate(ordered, 1):
         derive(r)
-        shutil.copy(SRC_IMG / r["img"], OUT / "images" / r["img"])
-        r["img"] = f"rx/images/{r['img']}"
+        new_img = f"rx_{n:03d}.jpg"
+        shutil.copy(SRC_IMG / r["img"], OUT / "images" / new_img)
+        r["src_rx"] = r["rx"]          # original dataset ID, for audit trail
+        r["rx"] = f"RX_{n:03d}"
+        r["img"] = f"rx/images/{new_img}"
         out.append(r)
     (OUT / "prescriptions.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     (OUT / "formulas.json").write_text(json.dumps(FORMULAS, ensure_ascii=False, indent=1), encoding="utf-8")

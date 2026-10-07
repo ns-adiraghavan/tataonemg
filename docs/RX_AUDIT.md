@@ -58,3 +58,20 @@ Kept only where verified against the image: RX_002's Malayalam clinic notice and
 - Confidence %, auto-clear rate and the "Handwritten" filter (all scripts are handwritten). Replaced by "key fields found" and "entries to check".
 - Diagnostics flag previously fired on any numeric vital (RX_002's weight/RR counted as a lab). It now needs a test ordered or a lab result on the script (RX_001, RX_004).
 - "Frequency" column renamed **Frequency / notes** everywhere, since that column also carries instructions (e.g. "SOS — for high fever", "HS").
+
+
+## Display numbering (v3)
+The client view now reads RX_001 – RX_008 consecutively. IDs were renumbered; the older audit notes above use the original dataset IDs.
+
+| Shown as | Original ID | Patient |
+|---|---|---|
+| RX_001 | RX_002 | Ashvika (CHC Nemmara) |
+| RX_002 | RX_003 | Mr. Subadh Bhatt |
+| RX_003 | RX_004 | Mr. Jitender Kr. |
+| RX_004 | RX_005 | Mr. Daniram Pal |
+| RX_005 | RX_006 | not named (VY ENT) |
+| RX_006 | RX_008 | Mr. Kiran Sinha |
+| RX_007 | RX_009 | Mr. Srinivas |
+| RX_008 | RX_001 | Asha Rani (AIIMS) |
+
+Other v3 changes: Malayalam text removed from line items (English only); the "only what is written…" footnote removed; "Entries to check" card removed from Clinical Analytics; Sex is its own field — taken from the script where written (Ashvika 4 yr/F, Asha Rani 70/F), otherwise inferred from the title (Mr. → Male) and labelled as inferred.

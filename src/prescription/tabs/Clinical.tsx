@@ -54,16 +54,6 @@ export function Clinical({ d }: { d: Data }) {
             />
           </Card>
 
-          <Card title="Entries to check" q="Scripts with handwriting the engine could not read reliably" info={<Info def={d.formulas.review} />}>
-            <Donut
-              data={[
-                { name: "All entries clear", value: S.n_pres - S.n_review, color: "#1a8a5a" },
-                { name: "Has entries to check", value: S.n_review, color: "#c8862f" },
-              ]}
-              centerTop={S.n_review}
-              centerSub="TO CHECK"
-            />
-          </Card>
         </div>
       </div>
     </div>

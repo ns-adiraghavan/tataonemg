@@ -19,7 +19,8 @@ export interface Rx {
   area: string;
   patient: string | null;
   age: number | null;
-  sex: string | null;
+  sex: string | null; // Male / Female
+  sex_basis: string | null; // written on script, or inferred from the title
   date: string | null;
   hospital: string | null;
   doctor: string | null;
